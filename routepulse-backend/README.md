@@ -56,8 +56,8 @@ as Integration. The checked-in `../data/anamizu-v2/seven-day-scenario.json`
 is the default daily observation file and uses that graph's exact version and
 directed edge IDs. The source OSM SHA-256 is
 `3aadb5e0145bd091b9f981b9da28255e758c926f5efbee26cf36901d72d9bc08`.
-The separate frontend map has not been changed and is not yet unified or
-connected to this backend.
+The frontend requests the road network from this backend. Its separate local
+OSM background has not yet been unified with the backend map extract.
 
 The importer uses OSM highway ways as directed, node-to-node candidate edges,
 excluding highway areas, and returns each edge's GeoJSON LineString geometry.
