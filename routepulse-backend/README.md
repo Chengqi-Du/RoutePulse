@@ -1,6 +1,6 @@
 # RoutePulse backend
 
-Simulation-only FastAPI backend generated from the supplied API contract and backend PRD. It implements the six contract endpoints, stores state in SQLite, and includes the in-process routing and limited question parser in `app/integration.py`.
+Simulation-only FastAPI backend generated from the supplied API contract and backend PRD. It implements the six contract endpoints, stores state in SQLite, and imports the shared pure routing and question modules from `algorithm/`.
 
 The fixed map is only a simulated road network. A route is the shortest-distance candidate under current simulated reports; it is not a safety assessment or real-world rescue navigation. The frontend should always display:
 
@@ -11,7 +11,7 @@ The fixed map is only a simulated road network. A route is the shortest-distance
 Python 3.10 or newer is recommended.
 
 ```bash
-cd outputs/routepulse-backend
+cd routepulse-backend
 python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
