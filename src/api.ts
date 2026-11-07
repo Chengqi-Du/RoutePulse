@@ -67,6 +67,10 @@ export const api = {
   getState: (areaId: string) => request<AreaState>(areaPath(areaId) + '/state'),
   calculate: (areaId: string, start: string, end: string, version: number) => mutate(areaId, '/routes', { expected_version: version, start_node_id: start, end_node_id: end }),
   report: (areaId: string, input: ManualReport, version: number) => mutate(areaId, '/reports', { ...input, expected_version: version }),
+  reportBatch: (areaId: string, input: ManualReport, edgeIds: string[], version: number) => {
+    const { edge_id: _edgeId, ...report } = input
+    return mutate(areaId, '/reports/batch', { ...report, edge_ids: edgeIds, expected_version: version })
+  },
   advance: (areaId: string, version: number, mode: AreaState['scenario_mode']) => mutate(areaId, mode === 'anamizu-7day' ? '/advance-day' : '/demo-advance', { expected_version: version }),
   async ask(areaId: string, question: string, version: number) {
     const result = await request<QuestionResult>(areaPath(areaId) + '/questions', { expected_version: version, question })

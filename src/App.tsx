@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useMemo, useState, type FormEvent, type ReactNode } from 'react'
-import { api, ApiError, reportLabels, statusLabels, type AreaState, type ManualReport, type ReportStatus, type Route } from './api'
+import { api, ApiError, reportLabels, statusLabels, type AreaState, type ManualReport, type Node, type ReportStatus, type Route } from './api'
 import NotoRoadMap from './NotoRoadMap'
 import RescueRouteMap from './RescueRouteMap'
+import { selectableNodes } from './nodeChoices'
 
 const time = (value: string) => new Date(value).toISOString().slice(11, 16) + ' UTC'
-const routeName = (route: Route | null) => !route ? 'No route calculated' : route.status === 'no_path' ? 'No candidate route' : `${route.start_node_id} → ${route.end_node_id} (${route.edge_ids.length} roads)`
+const routeName = (route: Route | null, nodes: Node[]) => !route ? 'No route calculated' : route.status === 'no_path' ? 'No candidate route' : `${nodes.find(node => node.id === route.start_node_id)?.name || route.start_node_id} → ${nodes.find(node => node.id === route.end_node_id)?.name || route.end_node_id} (${route.edge_ids.length} roads)`
 const routeDistance = (route: Route) => route.distance_m === null ? 'No path available' : `${route.distance_m.toLocaleString()} m`
 const examples = ['Why did the route change?', 'Which roads need checking?']
 
@@ -24,15 +25,15 @@ function RouteDisplay({ state }: { state: AreaState }) {
   const route = state.current_result
   const previous = state.history[state.history.length - 1]
   const changed = state.route_change.changed
-  const triggerReport = route && state.reports.find(report => report.id === route.trigger.report_id)
+  const triggerReport = route && state.reports.find(report => report.id === route.trigger.report_id || route.trigger.report_ids.includes(report.id))
   return <section className="card current-route"><div className="card-heading"><span className="eyebrow">CURRENT CANDIDATE ROUTE</span><span className={`eyebrow ${route?.status === 'found' ? 'positive' : 'accent'}`}>{route ? route.status === 'found' ? '● AVAILABLE' : '▲ NO PATH' : 'NOT CALCULATED'}</span></div>
-    {route ? <><div className="route-path">{routeName(route)}</div>{route.status === 'found' ? <div className="distance"><strong>{route.distance_m?.toLocaleString()}</strong><span>METRES · SIMULATED NETWORK</span></div> : <p className="route-message">No candidate route under the current exercise conditions.</p>}
+    {route ? <><div className="route-path">{routeName(route, state.nodes)}</div>{route.status === 'found' ? <div className="distance"><strong>{route.distance_m?.toLocaleString()}</strong><span>METRES · SIMULATED NETWORK</span></div> : <p className="route-message">No candidate route under the current exercise conditions.</p>}
       {triggerReport && <p className="route-reason">{changed ? 'Route changed' : 'Route unchanged'} after {triggerReport.edge_id}: {reportLabels[triggerReport.status].toLowerCase()}.</p>}</> : <p className="route-message">Select a start and destination to calculate a candidate route.</p>}
-    <div className="previous-route"><span>Previous route</span><strong>{previous ? `${routeName(previous)} · ${routeDistance(previous)}` : 'No history yet'}</strong></div>
+    <div className="previous-route"><span>Previous route</span><strong>{previous ? `${routeName(previous, state.nodes)} · ${routeDistance(previous)}` : 'No history yet'}</strong></div>
   </section>
 }
 
-function ReportForm({ state, selectedEdge, selectEdge, submit, busy }: { state: AreaState; selectedEdge: string; selectEdge: (id: string) => void; submit: (report: ManualReport) => void; busy: boolean }) {
+function ReportForm({ state, selectedEdge, selectEdge, submit, busy }: { state: AreaState; selectedEdge: string; selectEdge: (id: string) => void; submit: (report: ManualReport, edgeIds: string[]) => void; busy: boolean }) {
   const [status, setStatus] = useState<ReportStatus>('reported_blocked')
   const [sourceId, setSourceId] = useState('field-team-1')
   const [sourceName, setSourceName] = useState('Simulated field team 1 via radio')
@@ -40,16 +41,17 @@ function ReportForm({ state, selectedEdge, selectEdge, submit, busy }: { state: 
   const [note, setNote] = useState('')
   useEffect(() => { setObserved(state.scenario_time.slice(0, 19)) }, [state.scenario_time])
   const selected = state.edges.find(edge => edge.id === selectedEdge)
-  const directions = selected ? state.edges.filter(edge => edge.id === selected.id || (selected.osm_way_id && edge.osm_way_id === selected.osm_way_id && edge.from_node_id === selected.to_node_id && edge.to_node_id === selected.from_node_id)) : []
+  const reverseId = selected?.id.endsWith(':f') ? `${selected.id.slice(0, -1)}r` : selected?.id.endsWith(':r') ? `${selected.id.slice(0, -1)}f` : ''
+  const directions = selected ? state.edges.filter(edge => edge.id === selected.id || (edge.id === reverseId && edge.osm_way_id === selected.osm_way_id && edge.from_node_id === selected.to_node_id && edge.to_node_id === selected.from_node_id)) : []
   function onSubmit(event: FormEvent) {
     event.preventDefault()
     if (!selected || busy || (state.scenario_mode === 'anamizu-7day' && state.day_index === 0)) return
-    submit({ edge_id: selected.id, status, source_id: sourceId.trim(), source_name: sourceName.trim(), observed_at: `${observed}Z`, note: note.trim() })
+    submit({ edge_id: selected.id, status, source_id: sourceId.trim(), source_name: sourceName.trim(), observed_at: `${observed}Z`, note: note.trim() }, status === 'reported_blocked' ? directions.map(edge => edge.id) : [selected.id])
   }
   return <form className="card report-form" onSubmit={onSubmit}><div className="eyebrow">ADD MANUAL REPORT</div>
     {state.scenario_mode === 'anamizu-7day' && state.day_index === 0 && <p className="muted">Advance to Day 1 before submitting feedback: Day 0 reports can prevent the first frame from loading.</p>}
     <label>Road direction<select value={selectedEdge} onChange={event => selectEdge(event.target.value)}><option value="">Select a road on the map</option>{directions.map(edge => <option key={edge.id} value={edge.id}>{edge.name || 'Unnamed road'} · {edge.from_node_id} → {edge.to_node_id} · {statusLabels[edge.effective_status]}</option>)}</select></label>
-    <p className="muted">Feedback applies to the selected direction only. For the reverse direction, select it separately.</p>
+    <p className="muted">{status === 'reported_blocked' ? 'A blocked road closes both directions when available.' : 'Open and suspected reports apply to the selected direction only.'}</p>
     <label>Status<select value={status} onChange={event => setStatus(event.target.value as ReportStatus)}>{Object.entries(reportLabels).map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select></label>
     <div className="form-two"><label>Source ID<input required value={sourceId} onChange={event => setSourceId(event.target.value)} /></label><label>Source name<input required value={sourceName} onChange={event => setSourceName(event.target.value)} /></label></div>
     <label>Observed at · scenario time (UTC)<input type="datetime-local" step="1" required max={state.scenario_time.slice(0, 19)} value={observed} onChange={event => setObserved(event.target.value)} /></label>
@@ -89,7 +91,7 @@ function RoadReports({ state, related, selectedEdge }: { state: AreaState; relat
 }
 
 function RouteHistory({ state }: { state: AreaState }) {
-  return <><div className="history-list">{state.current_result && <div className="history-item"><span className="history-tag">NOW</span><div><strong>{routeName(state.current_result)}</strong><p>{routeDistance(state.current_result)} · Current candidate route</p></div></div>}{state.history.length ? [...state.history].reverse().map(route => <div className="history-item" key={route.id}><span className="history-tag">PAST</span><div><strong>{routeName(route)}</strong><p>{routeDistance(route)} · {time(route.computed_at)} scenario time</p></div></div>) : <p className="muted history-empty">No previous routes yet.</p>}</div>
+  return <><div className="history-list">{state.current_result && <div className="history-item"><span className="history-tag">NOW</span><div><strong>{routeName(state.current_result, state.nodes)}</strong><p>{routeDistance(state.current_result)} · Current candidate route</p></div></div>}{state.history.length ? [...state.history].reverse().map(route => <div className="history-item" key={route.id}><span className="history-tag">PAST</span><div><strong>{routeName(route, state.nodes)}</strong><p>{routeDistance(route)} · {time(route.computed_at)} scenario time</p></div></div>) : <p className="muted history-empty">No previous routes yet.</p>}</div>
     <div className="status-note"><span className="eyebrow">STATUS LABELS</span><p>Open, blocked, suspected, conflict and unknown describe simulated reports—not real-world safety.</p></div>
   </>
 }
@@ -106,10 +108,10 @@ export default function App() {
   const [busy, setBusy] = useState(false)
   const [lastRefresh, setLastRefresh] = useState('')
   const [stale, setStale] = useState(false)
-  const choices = useMemo(() => state ? state.nodes.filter(node => !node.osm_node_id || node.name !== `OSM node ${node.osm_node_id}`).slice(0, 50) : [], [state?.nodes])
+  const choices = useMemo(() => state ? selectableNodes(state) : [], [state?.nodes, state?.edges, state?.scenario_mode])
   const [panels, setPanels] = useState(() => {
     const expanded = window.matchMedia('(min-width: 900px)').matches
-    return { route: expanded, report: expanded, reports: expanded, ask: expanded, history: expanded }
+    return { route: expanded, report: false, reports: false, ask: false, history: false }
   })
 
   function togglePanel(panel: keyof typeof panels) {
@@ -132,7 +134,7 @@ export default function App() {
 
   function applyState(next: AreaState) {
     setState(next); setStale(false); setLastRefresh(new Date().toLocaleTimeString())
-    const available = next.nodes.filter(node => !node.osm_node_id || node.name !== `OSM node ${node.osm_node_id}`).slice(0, 50)
+    const available = selectableNodes(next)
     setStart(current => available.some(node => node.id === current) ? current : available[0]?.id || '')
     setEnd(current => available.some(node => node.id === current) ? current : available[1]?.id || '')
     setSelectedEdge(current => next.edges.some(edge => edge.id === current) ? current : '')
@@ -159,12 +161,19 @@ export default function App() {
   }
   return <div className={`app-shell ${page === 'route' ? 'route-shell' : ''}`}><header className="topbar"><button className="brand" onClick={() => setPage('overview')} aria-label="RoutePulse overview">ROUTE<span>PULSE</span><i> / EXERCISE PLATFORM</i></button><nav aria-label="Main navigation"><button className={page === 'overview' ? 'active' : ''} onClick={() => setPage('overview')}>Overview</button><button className={page === 'route' ? 'active' : ''} onClick={() => setPage('route')}>Rescue Route</button></nav><div className="topbar-right"><span className="simulation-badge">SIMULATION {page === 'route' && '/ AREA A'}</span><span className="avatar">OP</span></div></header>
     {!state ? <div className="loading" role="status">{error || 'Loading simulated exercise data…'} {error && <button onClick={() => { setError(''); api.initialState().then(applyState).catch(failure => setError(failure instanceof Error ? failure.message : 'Unable to load exercise data.')) }}>Retry</button>}</div> : page === 'overview' ? <Overview state={state} enter={() => setPage('route')} /> : <main className="route-workspace">
-      <RescueRouteMap state={stale ? { ...state, current_result: null } : state} selectedEdge={selectedEdge} onSelectEdge={selectEdge} choices={choices} />
-      <div className="route-search-bar"><div className="route-search-title"><span className="eyebrow">{state.area_id} / ROUTE PLANNING</span><h1>Rescue route</h1><span className="refresh-label">Scenario time · {time(state.scenario_time)}</span></div><div className="route-controls"><label className="select-card"><span className="eyebrow">START</span><select value={start} onChange={event => setStart(event.target.value)}>{choices.map(node => <option key={node.id} value={node.id}>{node.name} ({node.id})</option>)}</select></label><label className="select-card"><span className="eyebrow">DESTINATION</span><select value={end} onChange={event => setEnd(event.target.value)}>{choices.map(node => <option key={node.id} value={node.id}>{node.name} ({node.id})</option>)}</select></label><button className="primary-button calculate" disabled={busy || stale || !start || !end || start === end} onClick={() => run(() => api.calculate(state.area_id, start, end, state.version))}>Calculate route <span>→</span></button></div></div>
+      <RescueRouteMap state={stale ? { ...state, current_result: null } : state} selectedEdge={selectedEdge} onSelectEdge={selectEdge} choices={choices} startId={start} endId={end} />
+      <div className="route-search-bar"><div className="route-search-title"><span className="eyebrow">{state.area_id} / ROUTE PLANNING</span><h1>Rescue route</h1><span className="refresh-label">{state.scenario_mode === 'anamizu-7day' ? `Day ${state.day_index} / ${state.day_count} · ` : ''}{time(state.scenario_time)}</span></div><div className="route-controls"><label className="select-card"><span className="eyebrow">START</span><select value={start} onChange={event => setStart(event.target.value)}>{choices.map(node => <option key={node.id} value={node.id}>{node.name}{choices.filter(choice => choice.name === node.name).length > 1 ? ` (${node.id})` : ''}</option>)}</select></label><label className="select-card"><span className="eyebrow">DESTINATION</span><select value={end} onChange={event => setEnd(event.target.value)}>{choices.map(node => <option key={node.id} value={node.id}>{node.name}{choices.filter(choice => choice.name === node.name).length > 1 ? ` (${node.id})` : ''}</option>)}</select></label>{state.scenario_mode === 'anamizu-7day' && state.day_index === 0 ? <button className="primary-button calculate" disabled={busy || stale} onClick={() => run(() => api.advance(state.area_id, state.version, state.scenario_mode))}>Load Day 1 <span>→</span></button> : <button className="primary-button calculate" disabled={busy || stale || !start || !end || start === end} onClick={() => run(() => api.calculate(state.area_id, start, end, state.version))}>Calculate route <span>→</span></button>}{state.scenario_mode === 'anamizu-7day' && state.day_index > 0 && <button className="outline-button next-day-shortcut" disabled={busy || stale || state.day_index >= state.day_count} onClick={() => run(() => api.advance(state.area_id, state.version, state.scenario_mode))}>{state.day_index >= state.day_count ? 'Complete' : 'Next day'} →</button>}</div></div>
       <div className="route-notices"><div className="warning"><strong>!</strong><span>Simulation only · Not for real-world rescue navigation. Map and reports do not represent live road conditions.</span></div>{error && <div className="error" role="alert">{error} <button onClick={() => run(() => api.getState(state.area_id))}>Refresh state</button></div>}{stale && <div className="error">Current route may be out of date. Refresh the exercise state.</div>}</div>
       <aside className="floating-rail left-rail" aria-label="Route tools">
-        <FloatingPanel id="route-panel" label="Route" icon="⌖" open={panels.route} onToggle={() => togglePanel('route')}>{stale ? <div className="card current-route"><span className="eyebrow">CURRENT ROUTE UNAVAILABLE</span><p className="route-message">Refresh the exercise state to see the current route.</p></div> : <RouteDisplay state={state} />}</FloatingPanel>
-        <FloatingPanel id="report-panel" label="Manual report" icon="+" open={panels.report} onToggle={() => togglePanel('report')}><ReportForm state={state} selectedEdge={selectedEdge} selectEdge={selectEdge} busy={busy || stale} submit={report => run(() => api.report(state.area_id, report, state.version))} /></FloatingPanel>
+        <FloatingPanel id="route-panel" label="Route" icon="⌖" open={panels.route} onToggle={() => togglePanel('route')}>{stale ? <div className="card current-route"><span className="eyebrow">CURRENT ROUTE UNAVAILABLE</span><p className="route-message">Refresh the exercise state to see the current route.</p></div> : <RouteDisplay state={state.current_result && (state.current_result.start_node_id !== start || state.current_result.end_node_id !== end) ? { ...state, current_result: null } : state} />}</FloatingPanel>
+        <FloatingPanel id="report-panel" label="Manual report" icon="+" open={panels.report} onToggle={() => togglePanel('report')}><ReportForm state={state} selectedEdge={selectedEdge} selectEdge={selectEdge} busy={busy || stale} submit={(report, edgeIds) => run(async () => {
+          let next = edgeIds.length > 1 ? await api.reportBatch(state.area_id, report, edgeIds, state.version) : await api.report(state.area_id, report, state.version)
+          if (start && end && start !== end && (!next.current_result || next.current_result.start_node_id !== start || next.current_result.end_node_id !== end)) {
+            next = await api.calculate(next.area_id, start, end, next.version)
+          }
+          setSelectedEdge('')
+          return next
+        })} /></FloatingPanel>
         {!panels.history && <button className="history-tab" aria-expanded="false" aria-controls="history-panel" onClick={() => togglePanel('history')}><span aria-hidden="true">↶</span> HISTORY</button>}
         <button className="rail-toggle" onClick={() => toggleRail('left')}>{panels.route || panels.report ? 'Collapse panels −' : 'Expand panels +'}</button>
       </aside>
@@ -174,7 +183,7 @@ export default function App() {
         {!panels.history && <button className="history-tab" aria-expanded="false" aria-controls="history-panel" onClick={() => togglePanel('history')}><span aria-hidden="true">↶</span> HISTORY</button>}
         <button className="rail-toggle" onClick={() => toggleRail('right')}>{panels.reports || panels.ask ? 'Collapse panels −' : 'Expand panels +'}</button>
       </aside>
-      <section id="history-panel" className="floating-history" hidden={!panels.history}><div className="history-heading"><div><span className="eyebrow">SCENARIO TIME · {time(state.scenario_time)}</span><h2>Route history</h2><span className="refresh-label">Last refresh: {lastRefresh}</span></div><button className="history-close" aria-label="Collapse route history" aria-expanded="true" aria-controls="history-panel" onClick={() => togglePanel('history')}>−</button></div><RouteHistory state={stale ? { ...state, current_result: null } : state} /></section>
+      <section id="history-panel" className="floating-history" hidden={!panels.history}><div className="history-heading"><div><span className="eyebrow">SCENARIO TIME · {time(state.scenario_time)}</span><h2>Route history</h2><span className="refresh-label">Last refresh: {lastRefresh}</span></div><button className="history-close" aria-label="Collapse route history" aria-expanded="true" aria-controls="history-panel" onClick={() => togglePanel('history')}>−</button></div><RouteHistory state={stale || (state.current_result && (state.current_result.start_node_id !== start || state.current_result.end_node_id !== end)) ? { ...state, current_result: null } : state} /></section>
     </main>}
   </div>
 }

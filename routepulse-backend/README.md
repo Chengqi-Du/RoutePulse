@@ -52,12 +52,20 @@ PYTHONPATH=.. python -m uvicorn app.main:app --reload --port 8000
 
 On first startup this mode imports the shared `data/map.osm` into its own
 SQLite database, using the same `algorithm.osm_graph.build_graph` converter
-as Integration. The checked-in `../data/anamizu-v2/seven-day-scenario.json`
+as Integration. The checked-in `../data/anamizu-demo/seven-day-scenario.json`
 is the default daily observation file and uses that graph's exact version and
 directed edge IDs. The source OSM SHA-256 is
 `3aadb5e0145bd091b9f981b9da28255e758c926f5efbee26cf36901d72d9bc08`.
-The frontend requests the road network from this backend. Its separate local
-OSM background has not yet been unified with the backend map extract.
+The frontend requests the road network from this backend; its separate local
+OSM background is not the authoritative graph.
+
+The default fictional demo closes 95 of 2,540 physical segments each day,
+changes closures daily, and preserves existing directed reachability. It is
+designed for demonstration, not realism. The original severe scenario remains
+available at `../data/anamizu-v2/seven-day-scenario.json`; select it with
+`ROUTEPULSE_DAY_TEMPLATES_PATH` and a fresh database. An in-progress database
+cannot silently switch scenarios: `/advance-day` returns `SCENARIO_MISMATCH`
+when the previously applied day does not match the selected template.
 
 The importer uses OSM highway ways as directed, node-to-node candidate edges,
 excluding highway areas, and returns each edge's GeoJSON LineString geometry.

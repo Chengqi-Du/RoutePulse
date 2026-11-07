@@ -20,7 +20,7 @@ def osm_path() -> Path:
 
 def day_templates_path() -> Path:
     return Path(os.environ.get(
-        "ROUTEPULSE_DAY_TEMPLATES_PATH", str(BACKEND_DIR.parent / "data" / "anamizu-v2" / "seven-day-scenario.json")
+        "ROUTEPULSE_DAY_TEMPLATES_PATH", str(BACKEND_DIR.parent / "data" / "anamizu-demo" / "seven-day-scenario.json")
     )).expanduser()
 
 

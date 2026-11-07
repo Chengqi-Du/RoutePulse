@@ -316,6 +316,12 @@ def validate_seven_day_scenario(graph: Graph, scenario: object) -> None:
         if scenario.get("scenario_version") != f"{_PROFILE}-{graph['graph_version']}":
             raise ValueError("scenario_version does not match the profile and graph")
         _validate_severe_profile(graph, days)
+    elif profile == "accessible_demo_v3":
+        from .demo_scenario import PROFILE, validate_demo_profile
+
+        if scenario.get("scenario_version") != f"{PROFILE}-{graph['graph_version']}":
+            raise ValueError("scenario_version does not match the profile and graph")
+        validate_demo_profile(graph, days)
     elif profile is not None:
         raise ValueError(f"unsupported scenario profile: {profile!r}")
 

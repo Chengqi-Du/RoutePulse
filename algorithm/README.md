@@ -89,8 +89,9 @@ prove that their APIs or UI are integrated.
 
 The backend and Integration use the same `build_graph` converter and the
 repository's canonical `routepulse-backend/data/map.osm`. The backend's default
-seven-day template is the checked-in `data/anamizu-v2/seven-day-scenario.json`.
-The separate frontend map is not yet unified or connected. The export uses only
+seven-day template is the checked-in `data/anamizu-demo/seven-day-scenario.json`.
+The frontend displays the backend graph, while its separate local OSM
+background is not authoritative. The export uses only
 Python's standard library. From `RoutePulse/`:
 
 ```bash
@@ -159,7 +160,19 @@ implemented. Highway areas are excluded and listed in the quality report.
 `type: junction` denotes an OSM road node, not proof it is a physical junction.
 
 All daily observations are scripted and include every exported directed edge.
-The current `severe_damage_v2` profile keeps **20–30% open** by physical segment
+The default `accessible_demo_v3` profile closes 95 of 2,540 physical segments
+per day and changes the closed segments every day. It preserves all directed
+reachability present in the original graph, but a manual report can still make
+a route impossible. Generate a fresh copy without overwriting an existing file:
+
+```bash
+python3 -m algorithm.demo_scenario routepulse-backend/data/map.osm \
+  --output data/anamizu-demo-new/seven-day-scenario.json
+```
+
+Create the parent output directory before running the command. The original
+`data/anamizu-v2/seven-day-scenario.json` uses the `severe_damage_v2` profile,
+which keeps **20–30% open** by physical segment
 count, directed edge count, and physical road length each day; the rest are
 blocked. At least 2% of physical segments reopen and another 2% newly close
 between each consecutive pair of days. Both directions of a physical segment
@@ -194,8 +207,9 @@ python3 -m algorithm.validate_scenario \
 The backend can also call `validate_seven_day_scenario(graph, scenario)` from
 `algorithm.seven_day`; it raises `ValueError` on validation failure. Importers
 still need to validate the graph's nodes, geometry and lengths independently.
-The `severe_damage_v2` profile additionally checks the percentages, consistent
-directions, daily changes and summaries. Preserve and check `scenario_version`
+Both profiles additionally check their respective percentages, consistent
+directions, daily changes and summaries; `accessible_demo_v3` also validates
+its connectivity guarantees. Preserve and check `scenario_version`
 alongside `graph_version` when importing a scenario: the same road graph can
 have different simulated scenarios.
 

@@ -641,6 +641,15 @@ def advance_day(area_id: str, body: VersionRequest) -> dict[str, Any]:
                 raise ApiError(503, "DAY_TEMPLATES_NOT_CONFIGURED", "Integration's seven-day road observation file has not been supplied.", area["version"]) from exc
             except ValueError as exc:
                 raise ApiError(422, "INVALID_DAY_TEMPLATES", str(exc), area["version"]) from exc
+            if area["day_index"] > 0 and (
+                not area["day_frame_json"]
+                or decode_json(area["day_frame_json"]) != frames[area["day_index"] - 1]
+            ):
+                raise ApiError(
+                    409, "SCENARIO_MISMATCH",
+                    "This database was started with different day templates. Use the original templates or a new database.",
+                    area["version"],
+                )
             next_index = area["day_index"] + 1
             frame = frames[next_index - 1]
             frame_time = frame["scenario_time"]

@@ -32,7 +32,7 @@ directions must include both edge IDs in `road_observations`; a one-way segment
 has only its permitted direction. The edge IDs are returned by `/state` and are
 bound to the `graph_version`.
 
-The default frames are `../../data/anamizu-v2/seven-day-scenario.json`;
+The default frames are `../../data/anamizu-demo/seven-day-scenario.json`;
 `ROUTEPULSE_DAY_TEMPLATES_PATH` selects an alternative. The template must bind
 to the imported `graph_version` so observations cannot accidentally target a
 different OSM extract. The frames are fictional simulations, not satellite

@@ -9,14 +9,15 @@ import { renderOsm } from './osmMap'
 const colors: Record<EffectiveStatus, string> = {
   open: '#208258', blocked: '#c83e49', suspected: '#d4871e', conflict: '#9b44a8', unknown: '#6f7a86',
 }
+const priority: Record<EffectiveStatus, number> = { open: 0, unknown: 1, suspected: 2, conflict: 3, blocked: 4 }
 
 function edgePoints(edge: Edge, nodes: Map<string, Node>): L.LatLngExpression[] {
   const coordinates = edge.geometry?.coordinates || [nodes.get(edge.from_node_id)?.coordinates, nodes.get(edge.to_node_id)?.coordinates]
   return coordinates.filter((point): point is [number, number] => !!point).map(([longitude, latitude]) => [latitude, longitude])
 }
 
-export default function RescueRouteMap({ state, selectedEdge, onSelectEdge, choices }: {
-  state: AreaState; selectedEdge: string; onSelectEdge: (id: string) => void; choices: Node[]
+export default function RescueRouteMap({ state, selectedEdge, onSelectEdge, choices, startId, endId }: {
+  state: AreaState; selectedEdge: string; onSelectEdge: (id: string) => void; choices: Node[]; startId: string; endId: string
 }) {
   const element = useRef<HTMLDivElement>(null)
   const mapRef = useRef<L.Map | null>(null)
@@ -65,7 +66,7 @@ export default function RescueRouteMap({ state, selectedEdge, onSelectEdge, choi
     const nodes = new Map(state.nodes.map(node => [node.id, node]))
     const renderer = L.canvas({ padding: 0.5, pane: 'network' })
     const layer = L.layerGroup().addTo(map)
-    for (const edge of state.edges) {
+    for (const edge of [...state.edges].sort((a, b) => priority[a.effective_status] - priority[b.effective_status])) {
       const points = edgePoints(edge, nodes)
       if (points.length < 2) continue
       L.polyline(points, { renderer, color: colors[edge.effective_status], weight: 4, opacity: 0.85 })
@@ -80,9 +81,35 @@ export default function RescueRouteMap({ state, selectedEdge, onSelectEdge, choi
   useEffect(() => {
     const map = mapRef.current
     if (!map) return
+    const layer = L.layerGroup().addTo(map)
+    const positions: L.LatLngExpression[] = []
+    for (const [id, label, style] of [[startId, 'START', 'start'], [endId, 'END', 'end']]) {
+      const node = state.nodes.find(item => item.id === id)
+      if (!node) continue
+      const position: L.LatLngExpression = [node.coordinates[1], node.coordinates[0]]
+      positions.push(position)
+      const text = document.createElement('span')
+      text.textContent = `${label}: ${node.name}`
+      const icon = L.divIcon({ className: `endpoint-marker endpoint-${style}`, html: text, iconSize: [0, 0], iconAnchor: [0, 0] })
+      L.marker(position, { pane: 'routeHighlight', icon, interactive: false }).addTo(layer)
+    }
+    if (positions.length) {
+      const horizontalPadding = Math.min(280, Math.max(20, map.getSize().x * 0.18))
+      map.fitBounds(L.latLngBounds(positions), {
+        paddingTopLeft: [horizontalPadding, 150], paddingBottomRight: [horizontalPadding, 120],
+        maxZoom: 16, animate: false,
+      })
+    }
+    return () => { layer.remove() }
+  }, [startId, endId, state.area_id])
+
+  useEffect(() => {
+    const map = mapRef.current
+    if (!map) return
     const nodes = new Map(state.nodes.map(node => [node.id, node]))
     const layer = L.layerGroup().addTo(map)
-    const routeIds = new Set(state.current_result?.edge_ids || [])
+    const current = state.current_result
+    const routeIds = new Set(current && current.start_node_id === startId && current.end_node_id === endId ? current.edge_ids : [])
     for (const edge of state.edges) {
       if (!routeIds.has(edge.id) && edge.id !== selectedEdge) continue
       const points = edgePoints(edge, nodes)
@@ -90,10 +117,10 @@ export default function RescueRouteMap({ state, selectedEdge, onSelectEdge, choi
       L.polyline(points, { pane: 'routeHighlight', color: edge.id === selectedEdge ? '#ffe400' : '#1268ed', weight: edge.id === selectedEdge ? 8 : 6, opacity: 0.95, interactive: false }).addTo(layer)
     }
     return () => { layer.remove() }
-  }, [state.nodes, state.edges, state.current_result, selectedEdge])
+  }, [state.nodes, state.edges, state.current_result, selectedEdge, startId, endId])
 
   return <section className="map-frame route-map-frame" aria-label="Exercise road network map">
-    <div className="map-toolbar"><div><span className="eyebrow">SIMULATED ROAD NETWORK</span><p>Click a road to report it. Colors show directed road status; blue is the candidate route, yellow is selected. Two directions may overlap.</p><p>Green: open · red: blocked · orange: suspected · purple: conflict · gray: unknown.</p></div><div className="map-actions"><button type="button" onClick={() => { if (mapRef.current && boundsRef.current) mapRef.current.fitBounds(boundsRef.current, { padding: [20, 20] }) }}>Reset view</button><button type="button" onClick={() => { if (mapRef.current && boundaryRef.current) { boundaryRef.current.addTo(mapRef.current); mapRef.current.fitBounds(boundaryRef.current.getBounds(), { padding: [20, 20] }) } }} disabled={!boundaryReady}>Show boundary</button></div></div>
+    <div className="map-toolbar"><div><span className="eyebrow">SIMULATED ROAD NETWORK</span><p>Start and end are marked on the map. Named choices share a connected road network; manual reports may still block a route.</p><p>Click a road to report it. Green: open · red: blocked · blue: route · yellow: selected. Two directions may overlap.</p></div><div className="map-actions"><button type="button" onClick={() => { if (mapRef.current && boundsRef.current) mapRef.current.fitBounds(boundsRef.current, { padding: [20, 20] }) }}>Reset view</button><button type="button" onClick={() => { if (mapRef.current && boundaryRef.current) { boundaryRef.current.addTo(mapRef.current); mapRef.current.fitBounds(boundaryRef.current.getBounds(), { padding: [20, 20] }) } }} disabled={!boundaryReady}>Show boundary</button></div></div>
     {(mapStatus || boundaryStatus) && <p className="map-status" role="status">{mapStatus} {boundaryStatus}</p>}
     <div ref={element} className="leaflet-map rescue-leaflet-map" aria-label="Road network with simulated statuses" />
   </section>

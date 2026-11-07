@@ -41,7 +41,10 @@ class SevenDayHttpTests(unittest.TestCase):
 
         with tempfile.TemporaryDirectory(prefix="routepulse-seven-day-") as directory:
             db_path = Path(directory) / "scenario.sqlite3"
-            options = {"ROUTEPULSE_SCENARIO_MODE": "anamizu-7day"}
+            options = {
+                "ROUTEPULSE_SCENARIO_MODE": "anamizu-7day",
+                "ROUTEPULSE_DAY_TEMPLATES_PATH": str(DATA / "seven-day-scenario.json"),
+            }
             with running_backend(ROOT, BACKEND, db_path=db_path, extra_env=options) as (client, _, _):
                 initial = client.request("GET", AREA + "/state")
                 self.assertEqual(initial["graph_version"], graph["graph_version"])
