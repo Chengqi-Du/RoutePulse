@@ -13,6 +13,8 @@ class QuestionTests(unittest.TestCase):
             ("Why did the route change.", "why_changed", None, None),
             ("WHICH ROADS NEED CHECKING!", "needs_check", None, None),
             ("How can I get from S to T?", "route", "S", "T"),
+            ("  Why   did the route  change？ ", "why_changed", None, None),
+            ("How can I get from  Base   S  to Incident T？！", "route", "S", "T"),
         ]
         for question, intent, start, end in cases:
             with self.subTest(question=question):

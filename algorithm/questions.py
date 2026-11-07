@@ -17,7 +17,7 @@ _ROUTE_QUESTION = re.compile(r"how can i get from (.+?) to (.+)", re.IGNORECASE)
 
 
 def _normalize(text: str) -> str:
-    return text.strip().casefold()
+    return " ".join(text.casefold().split())
 
 
 def parse_question(question: str, locations: Mapping[str, str]) -> QuestionResult:
@@ -40,7 +40,7 @@ def parse_question(question: str, locations: Mapping[str, str]) -> QuestionResul
             raise ValueError(f"location name {name!r} maps to multiple node IDs")
         normalized_locations[normalized_name] = node_id
 
-    normalized_question = _normalize(re.sub(r"[?.!]+$", "", question.strip()))
+    normalized_question = _normalize(question.strip().rstrip(" .!?。？！"))
     if normalized_question == "why did the route change":
         return {"intent": "why_changed", "start_node_id": None, "end_node_id": None}
     if normalized_question == "which roads need checking":

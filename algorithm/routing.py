@@ -5,6 +5,7 @@ from __future__ import annotations
 import heapq
 import math
 from collections.abc import Sequence
+from fractions import Fraction
 from itertools import count
 from typing import Literal, TypedDict
 
@@ -71,7 +72,7 @@ def find_route(
     if start not in node_ids or end not in node_ids:
         raise ValueError("start_node_id and end_node_id must exist in nodes")
 
-    adjacency: dict[str, list[tuple[str, str, int | float]]] = {
+    adjacency: dict[str, list[tuple[str, str, Fraction, bool]]] = {
         node_id: [] for node_id in node_ids
     }
     edge_ids: set[str] = set()
@@ -89,21 +90,32 @@ def find_route(
         if not isinstance(status, str) or status not in _STATUSES:
             raise ValueError(f"edge {edge_id!r} has an invalid effective_status")
         if status == "open":
-            adjacency[source].append((edge_id, target, length))
+            cost = Fraction(length) if isinstance(length, int) else Fraction(str(length))
+            adjacency[source].append((edge_id, target, cost, isinstance(length, float)))
 
     for outgoing in adjacency.values():
         outgoing.sort(key=lambda edge: edge[0])
 
-    distances: dict[str, int | float] = {start: 0}
+    distances: dict[str, Fraction] = {start: Fraction(0)}
+    uses_float: dict[str, bool] = {start: False}
     previous: dict[str, tuple[str, str]] = {}
     serial = count()
-    queue: list[tuple[int | float, int, str]] = [(0, next(serial), start)]
+    queue: list[tuple[Fraction, int, str]] = [(Fraction(0), next(serial), start)]
 
     while queue:
         distance, _, current = heapq.heappop(queue)
         if distance != distances[current]:
             continue
         if current == end:
+            if uses_float[current]:
+                try:
+                    route_distance: int | float = float(distance)
+                except OverflowError as exc:
+                    raise ValueError("route distance exceeds numeric limits") from exc
+                if not math.isfinite(route_distance):
+                    raise ValueError("route distance exceeds numeric limits")
+            else:
+                route_distance = distance.numerator
             path_nodes = [end]
             path_edges: list[str] = []
             while current != start:
@@ -115,18 +127,22 @@ def find_route(
                 "status": "found",
                 "node_ids": list(reversed(path_nodes)),
                 "edge_ids": list(reversed(path_edges)),
-                "distance_m": distance,
+                "distance_m": route_distance,
             }
 
-        for edge_id, target, length in adjacency[current]:
-            try:
-                candidate = distance + length
-            except OverflowError as exc:
-                raise ValueError("route distance exceeds numeric limits") from exc
-            if isinstance(candidate, float) and not math.isfinite(candidate):
-                raise ValueError("route distance exceeds numeric limits")
+        for edge_id, target, length, length_is_float in adjacency[current]:
+            candidate = distance + length
+            candidate_uses_float = uses_float[current] or length_is_float
+            if candidate_uses_float:
+                try:
+                    finite_candidate = math.isfinite(float(candidate))
+                except OverflowError as exc:
+                    raise ValueError("route distance exceeds numeric limits") from exc
+                if not finite_candidate:
+                    raise ValueError("route distance exceeds numeric limits")
             if target not in distances or candidate < distances[target]:
                 distances[target] = candidate
+                uses_float[target] = candidate_uses_float
                 previous[target] = (current, edge_id)
                 heapq.heappush(queue, (candidate, next(serial), target))
 

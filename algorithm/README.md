@@ -17,8 +17,10 @@ arrays from one evaluated API state snapshot. Each node needs `id`; each edge
 needs `id`, `from_node_id`, `to_node_id`, `length_m`, and `effective_status`.
 Extra API fields are harmless. Only `open` directed edges are eligible. The
 algorithm is A* with `h=0`, which is equivalent to Dijkstra's search. It returns
-the route result fields defined in the shared contract. Invalid graph data
-raises `ValueError`; a valid graph without a route returns `no_path`.
+the route result fields defined in the shared contract. Fractional lengths are
+compared using their decimal values without intermediate floating-point
+rounding. Invalid graph data raises `ValueError`; a valid graph without a route
+returns `no_path`.
 
 ```python
 result = find_route(nodes, edges, "S", "T")

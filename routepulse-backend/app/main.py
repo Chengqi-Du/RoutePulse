@@ -578,17 +578,31 @@ def needs_check_answer(connection: sqlite3.Connection, area: sqlite3.Row) -> tup
     return message, [edge["id"] for edge in needs_check]
 
 
+def question_locations(connection: sqlite3.Connection, area_id: str) -> dict[str, str]:
+    locations: dict[str, str] = {}
+    for node in all_nodes(connection, area_id):
+        for name in (node["name"], node["id"]):
+            if name in locations and locations[name] != node["id"]:
+                raise ValueError(f"Location name {name!r} maps to multiple nodes.")
+            locations[name] = node["id"]
+    return locations
+
+
 @app.post("/api/areas/{area_id}/questions")
 def ask_question(area_id: str, body: QuestionRequest) -> dict[str, Any]:
     with connect() as connection:
         with transaction(connection):
             area = require_area(connection, area_id)
             check_version(area, body.expected_version)
-            parsed = parse_question(body.question, all_nodes(connection, area_id))
-            intent = str(parsed["intent"])
+            parsed = parse_question(body.question, question_locations(connection, area_id))
+            intent = parsed["intent"]
             if intent == "route":
+                start_node_id = parsed["start_node_id"]
+                end_node_id = parsed["end_node_id"]
+                if start_node_id is None or end_node_id is None:
+                    raise ValueError("A route question must identify both nodes.")
                 route, change = compute_and_store_route(
-                    connection, area, str(parsed["start_node_id"]), str(parsed["end_node_id"]), "user_request", None
+                    connection, area, start_node_id, end_node_id, "user_request", None
                 )
                 version = save_calculation(connection, area, route, change)
                 answer, related = route_answer(route)
@@ -603,4 +617,3 @@ def ask_question(area_id: str, body: QuestionRequest) -> dict[str, Any]:
                 answer = "I can answer: 'How can I get from Base S to Incident T?', 'Why did the route change?', or 'Which roads need checking?'."
                 related = []
             return {"version": version, "intent": intent, "answer": answer, "related_edge_ids": related}
-

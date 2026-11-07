@@ -60,6 +60,31 @@ class RouteTests(unittest.TestCase):
         self.nodes = self.scenario["nodes"]
         self.edges = self.scenario["edges"]
 
+    def test_fractional_lengths_are_compared_without_float_rounding(self):
+        nodes = [{"id": node} for node in ("S", "A", "T")]
+        edges = [
+            {"id": "direct", "from_node_id": "S", "to_node_id": "T", "length_m": 0.30000000000000004, "effective_status": "open"},
+            {"id": "first", "from_node_id": "S", "to_node_id": "A", "length_m": 0.1, "effective_status": "open"},
+            {"id": "second", "from_node_id": "A", "to_node_id": "T", "length_m": 0.2, "effective_status": "open"},
+        ]
+        result = find_route(nodes, edges, "S", "T")
+        self.assertEqual(result["edge_ids"], ["first", "second"])
+        self.assertEqual(result["distance_m"], 0.3)
+
+    def test_float_distances_preserve_type_and_reject_overflow(self):
+        nodes = [{"id": node} for node in ("S", "A", "T")]
+        edges = [
+            {"id": "first", "from_node_id": "S", "to_node_id": "A", "length_m": 1e100, "effective_status": "open"},
+            {"id": "second", "from_node_id": "A", "to_node_id": "T", "length_m": 1e100, "effective_status": "open"},
+        ]
+        result = find_route(nodes, edges, "S", "T")
+        self.assertIsInstance(result["distance_m"], float)
+        self.assertEqual(result["distance_m"], 2e100)
+        edges[0]["length_m"] = 1e308
+        edges[1]["length_m"] = 1e308
+        with self.assertRaisesRegex(ValueError, "exceeds numeric limits"):
+            find_route(nodes, edges, "S", "T")
+
     def test_initial_and_blocked_routes(self):
         initial = find_route(self.nodes, self.edges, "S", "T")
         self.assertEqual(initial["node_ids"], ["S", "A", "T"])
