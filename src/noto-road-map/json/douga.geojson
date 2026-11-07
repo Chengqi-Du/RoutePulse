@@ -1,0 +1,155 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "大谷トンネル被害状況調査",
+        "啓開作業等": "<iframe width=\"100%\"  src=\"https://www.youtube.com/embed/spJdQDF14Ec\" title=\"国道249号大谷トンネルの崩落状況を調査【#令和6年能登半島地震　緊急復旧】",
+        "_markerType": "Icon",
+        "_iconUrl": "https://www.mlit.go.jp/road/r6noto/map/img/icon_movie.png",
+        "_iconSize": [
+          30,
+          30
+        ],
+        "_iconAnchor": [
+          15,
+          15
+        ]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          137.199191,
+          37.481921,
+          253
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "国道249号輪島市門前町浦上の道路啓開作業",
+        "啓開作業等": "<iframe width=\"100%\" src=\"https://www.youtube.com/embed/gHBg1C3Sc8w\" title=\"国道249号輪島市門前町浦上の緊急復旧（道路啓開）作業【#令和6年能登半島地震　道路啓開】",
+        "_markerType": "Icon",
+        "_iconUrl": "https://www.mlit.go.jp/road/r6noto/map/img/icon_movie.png",
+        "_iconSize": [
+          30,
+          30
+        ],
+        "_iconAnchor": [
+          15,
+          15
+        ]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          136.81099,
+          37.32159,
+          98
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "立ち入り規制箇所へのヘリでの調査",
+        "啓開作業等": "<iframe width=\"100%\" src=\"https://www.youtube.com/embed/sbwjAE-3scg\" title=\"陸路から到達できない地点の被害状況を調査【#令和6年能登半島地震　被災状況調査】",
+        "_markerType": "Icon",
+        "_iconUrl": "https://www.mlit.go.jp/road/r6noto/map/img/icon_movie.png",
+        "_iconSize": [
+          30,
+          30
+        ],
+        "_iconAnchor": [
+          15,
+          15
+        ]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          136.998108,
+          37.424091,
+          57.3
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "深見海岸からの資機材陸揚げ",
+        "啓開作業等": "<iframe width=\"100%\"  src=\"https://www.youtube.com/embed/oH3L-2oW7Nw\" title=\"陸路でアクセス困難な地点に海上から資機材搬入【令和6年能登半島地震　被災状況調査】",
+        "_markerType": "Icon",
+        "_iconUrl": "https://www.mlit.go.jp/road/r6noto/map/img/icon_movie.png",
+        "_iconSize": [
+          30,
+          30
+        ],
+        "_iconAnchor": [
+          15,
+          15
+        ]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          136.973771,
+          37.413054,
+          1.1
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "のと里山空港における災害対策支援",
+        "啓開作業等": "<iframe width=\"100%\" src=\"https://www.youtube.com/embed/fpEA1xY8LiM\" title=\"のと里山空港にTEC-FORCEが「道路啓開支援センター」を開設【令和6年能登半島地震　災害対策支援】",
+        "_markerType": "Icon",
+        "_iconUrl": "https://www.mlit.go.jp/road/r6noto/map/img/icon_movie.png",
+        "_iconSize": [
+          30,
+          30
+        ],
+        "_iconAnchor": [
+          15,
+          15
+        ]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          136.957579,
+          37.294794,
+          216
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "大谷ループ橋被害状況調査",
+        "啓開作業等": "<iframe width=\"100%\" src=\"https://www.youtube.com/embed/_afIzu8lFfQ\" title=\"国道249号大谷ループ橋(珠洲市馬緤町)の被災状況を調査【令和6年能登半島地震　被災状況調査】",
+        "_markerType": "Icon",
+        "_iconUrl": "https://www.mlit.go.jp/road/r6noto/map/img/icon_movie.png",
+        "_iconSize": [
+          30,
+          30
+        ],
+        "_iconAnchor": [
+          15,
+          15
+        ]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          137.181452,
+          37.497483,
+          58.1
+        ]
+      }
+    }
+  ]
+}

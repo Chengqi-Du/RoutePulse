@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>穴水町救援区域地图 | RoutePulse</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <style>
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; }
+    body { display: flex; flex-direction: column; font: 14px/1.5 system-ui, sans-serif; color: #17212b; }
+    header { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; padding: 10px 16px; background: #fff; }
+    h1 { margin: 0; font-size: 18px; }
+    .subtitle { margin: 0; flex: 1 1 300px; color: #51606f; }
+    .actions { display: flex; flex-wrap: wrap; gap: 8px; }
+    button, .source-link { border: 1px solid #aebac7; border-radius: 6px; background: white; color: #173a59; padding: 6px 10px; font: inherit; text-decoration: none; cursor: pointer; }
+    button:disabled { cursor: not-allowed; opacity: .55; }
+    button:focus-visible, .source-link:focus-visible { outline: 3px solid #126cbb; outline-offset: 2px; }
+    #map { flex: 1 1 auto; min-height: 260px; }
+    #status { padding: 6px 16px; background: #fff3d3; color: #624500; }
+    #status:empty { display: none; }
+    .leaflet-control-attribution { font-size: 11px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>穴水町救援区域地图</h1>
+    <p class="subtitle">演示底图：当前 OpenStreetMap 数据，不代表 2024 年路况，不能用于真实救援导航。</p>
+    <div class="actions">
+      <button id="reset-view" type="button">返回初始位置</button>
+      <button id="show-boundary" type="button" disabled>查看穴水町边界</button>
+      <a class="source-link" href="https://www.openstreetmap.org/relation/4800047#map=16/37.23111/136.90830" target="_blank" rel="noopener noreferrer">查看 OSM 原始地图</a>
+    </div>
+  </header>
+  <div id="status" role="status" aria-live="polite"></div>
+  <div id="map" aria-label="穴水町 OpenStreetMap 地图"></div>
+  <script>
+    const status = document.getElementById('status');
+    const resetButton = document.getElementById('reset-view');
+    const boundaryButton = document.getElementById('show-boundary');
+    const initialCenter = [37.23111, 136.90830];
+    const initialZoom = 16;
+
+    if (typeof L === 'undefined') {
+      status.textContent = '地图组件加载失败。请检查网络连接，然后刷新页面。';
+      resetButton.disabled = true;
+    } else {
+      const map = L.map('map').setView(initialCenter, initialZoom);
+      const tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>'
+      }).addTo(map);
+      tiles.on('tileerror', () => {
+        status.textContent = '部分地图瓦片加载失败，请检查网络连接或访问 OSM 原始地图。';
+      });
+      L.control.scale({ imperial: false }).addTo(map);
+      resetButton.addEventListener('click', () => map.setView(initialCenter, initialZoom));
+
+      fetch('./data/anamizu-boundary.geojson')
+        .then(response => {
+          if (!response.ok) throw new Error(`Boundary request failed: HTTP ${response.status}`);
+          return response.json();
+        })
+        .then(data => {
+          if (data.type !== 'FeatureCollection' || !Array.isArray(data.features) || data.features.length === 0) {
+            throw new Error('Boundary data is not a non-empty GeoJSON FeatureCollection');
+          }
+          const boundary = L.geoJSON(data, {
+            style: { color: '#b02035', weight: 3, opacity: .9, dashArray: '8 6' }
+          }).addTo(map);
+          if (!boundary.getBounds().isValid()) throw new Error('Boundary geometry has no valid bounds');
+          L.control.layers(null, { '穴水町行政边界': boundary }).addTo(map);
+          boundaryButton.disabled = false;
+          boundaryButton.addEventListener('click', () => {
+            if (!map.hasLayer(boundary)) boundary.addTo(map);
+            map.fitBounds(boundary.getBounds(), { padding: [20, 20] });
+          });
+        })
+        .catch(error => {
+          console.error('Unable to load the Anamizu boundary:', error);
+          status.textContent = '穴水町边界加载失败。请通过本地服务器打开页面，并查看浏览器控制台。';
+        });
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,1455 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "01_KP1.0付近",
+        "復旧状況（空撮）": "<img width=\"100%\" src=\"./img/kuusatsu_recovery/01_KP1.0付近.jpg\">",
+        "_markerType": "Icon",
+        "_iconUrl": "https://maps.gsi.go.jp/portal/sys/v4/symbols/689.png",
+        "_iconSize": [
+          30,
+          30
+        ],
+        "_iconAnchor": [
+          15,
+          15
+        ]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          136.818837,
+          37.068342,
+          67.17
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "02_KP01付近",
+        "復旧状況（空撮）": "<img width=\"100%\" src=\"./img/kuusatsu_recovery/02_KP01付近.jpg\">",
+        "_markerType": "Icon",
+        "_iconUrl": "https://maps.gsi.go.jp/portal/sys/v4/symbols/691.png",
+        "_iconSize": [
+          30,
+          30
+        ],
+        "_iconAnchor": [
+          15,
+          15
+        ]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          136.824455,
+          37.074835,
+          151
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "03_KP1.0付近",
+        "復旧状況（空撮）": "<img width=\"100%\" src=\"./img/kuusatsu_recovery/03_KP1.0付近.jpg\">",
+        "_markerType": "Icon",
+        "_iconUrl": "https://maps.gsi.go.jp/portal/sys/v4/symbols/689.png",
+        "_iconSize": [
+          30,
+          30
+        ],
+        "_iconAnchor": [
+          15,
+          15
+        ]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          136.823497,
+          37.069247,
+          63.79
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "04_KP2.0付近",
+        "復旧状況（空撮）": "<img width=\"100%\" src=\"./img/kuusatsu_recovery/04_KP2.0付近.jpg\">",
+        "_markerType": "Icon",
+        "_iconUrl": "https://maps.gsi.go.jp/portal/sys/v4/symbols/693.png",
+        "_iconSize": [
+          30,
+          30
+        ],
+        "_iconAnchor": [
+          15,
+          15
+        ]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          136.8274,
+          37.08094,
+          235
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "05_KP2.0付近",
+        "復旧状況（空撮）": "<img width=\"100%\" src=\"./img/kuusatsu_recovery/05_KP2.0付近.jpg\">",
+        "_markerType": "Icon",
+        "_iconUrl": "https://maps.gsi.go.jp/portal/sys/v4/symbols/691.png",
+        "_iconSize": [
+          30,
+          30
+        ],
+        "_iconAnchor": [
+          15,
+          15
+        ]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          136.81949,
+          37.082845,
+          148
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "06_KP2.0付近",
+        "復旧状況（空撮）": "<img width=\"100%\" src=\"./img/kuusatsu_recovery/06_KP2.0付近.jpg\">",
+        "_markerType": "Icon",
+        "_iconUrl": "https://maps.gsi.go.jp/portal/sys/v4/symbols/687.png",
+        "_iconSize": [
+          30,
+          30
+        ],
+        "_iconAnchor": [
+          15,
+          15
+        ]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          136.826488,
+          37.074658,
+          322
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "07_KP2.0付近",
+        "復旧状況（空撮）": "<img width=\"100%\" src=\"./img/kuusatsu_recovery/07_KP2.0付近.jpg\">",
+        "_markerType": "Icon",
+        "_iconUrl": "https://maps.gsi.go.jp/portal/sys/v4/symbols/693.png",
+        "_iconSize": [
+          30,
+          30
+        ],
+        "_iconAnchor": [
+          15,
+          15
+        ]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          136.828147000069,
+          37.080808,
+          241
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "08_KP2.0付近",
+        "復旧状況（空撮）": "<img width=\"100%\" src=\"./img/kuusatsu_recovery/08_KP2.0付近.jpg\">",
+        "_markerType": "Icon",
+        "_iconUrl": "https://maps.gsi.go.jp/portal/sys/v4/symbols/692.png",
+        "_iconSize": [
+          30,
+          30
+        ],
+        "_iconAnchor": [
+          15,
+          15
+        ]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          136.819795,
+          37.084495,
+          197
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "09_KP2.0付近",
+        "復旧状況（空撮）": "<img width=\"100%\" src=\"./img/kuusatsu_recovery/09_KP2.0付近.jpg\">",
+        "_markerType": "Icon",
+        "_iconUrl": "https://maps.gsi.go.jp/portal/sys/v4/symbols/694.png",
+        "_iconSize": [
+          30,
+          30
+        ],
+        "_iconAnchor": [
+          15,
+          15
+        ]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          136.82385,
+          37.079247,
+          282
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "10_KP2.0付近",
+        "復旧状況（空撮）": "<img width=\"100%\" src=\"./img/kuusatsu_recovery/10_KP2.0付近.jpg\">",
+        "_markerType": "Icon",
+        "_iconUrl": "https://maps.gsi.go.jp/portal/sys/v4/symbols/692.png",
+        "_iconSize": [
+          30,
+          30
+        ],
+        "_iconAnchor": [
+          15,
+          15
+        ]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          136.81732,
+          37.08514,
+          172
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "11_KP6.0付近",
+        "復旧状況（空撮）": "<img width=\"100%\" src=\"./img/kuusatsu_recovery/11_KP6.0付近.jpg\">",
+        "_markerType": "Icon",
+        "_iconUrl": "https://maps.gsi.go.jp/portal/sys/v4/symbols/690.png",
+        "_iconSize": [
+          30,
+          30
+        ],
+        "_iconAnchor": [
+          15,
+          15
+        ]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          136.808003,
+          37.097302,
+          69
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "12_KP6.0付近",
+        "復旧状況（空撮）": "<img width=\"100%\" src=\"./img/kuusatsu_recovery/12_KP6.0付近.jpg\">",
+        "_markerType": "Icon",
+        "_iconUrl": "https://maps.gsi.go.jp/portal/sys/v4/symbols/688.png",
+        "_iconSize": [
+          30,
+          30
+        ],
+        "_iconAnchor": [
+          15,
+          15
+        ]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          136.81662,
+          37.093123,
+          353
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "13_KP6.0付近",
+        "復旧状況（空撮）": "<img width=\"100%\" src=\"./img/kuusatsu_recovery/13_KP6.0付近.jpg\">",
+        "_markerType": "Icon",
+        "_iconUrl": "https://maps.gsi.go.jp/portal/sys/v4/symbols/688.png",
+        "_iconSize": [
+          30,
+          30
+        ],
+        "_iconAnchor": [
+          15,
+          15
+        ]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          136.817862,
+          37.093455,
+          348
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "14_KP8.5付近",
+        "復旧状況（空撮）": "<img width=\"100%\" src=\"./img/kuusatsu_recovery/14_KP8.5付近.jpg\">",
+        "_markerType": "Icon",
+        "_iconUrl": "https://maps.gsi.go.jp/portal/sys/v4/symbols/691.png",
+        "_iconSize": [
+          30,
+          30
+        ],
+        "_iconAnchor": [
+          15,
+          15
+        ]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          136.8098,
+          37.125358,
+          135
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "15_KP8.5付近",
+        "復旧状況（空撮）": "<img width=\"100%\" src=\"./img/kuusatsu_recovery/15_KP8.5付近.jpg\">",
+        "_markerType": "Icon",
+        "_iconUrl": "https://maps.gsi.go.jp/portal/sys/v4/symbols/690.png",
+        "_iconSize": [
+          30,
+          30
+        ],
+        "_iconAnchor": [
+          15,
+          15
+        ]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          136.807163,
+          37.122323,
+          96
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "16_KP8.5付近",
+        "復旧状況（空撮）": "<img width=\"100%\" src=\"./img/kuusatsu_recovery/16_KP8.5付近.jpg\">",
+        "_markerType": "Icon",
+        "_iconUrl": "https://maps.gsi.go.jp/portal/sys/v4/symbols/692.png",
+        "_iconSize": [
+          30,
+          30
+        ],
+        "_iconAnchor": [
+          15,
+          15
+        ]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          136.819113,
+          37.129308,
+          202
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "17_KP8.5付近",
+        "復旧状況（空撮）": "<img width=\"100%\" src=\"./img/kuusatsu_recovery/17_KP8.5付近.jpg\">",
+        "_markerType": "Icon",
+        "_iconUrl": "https://maps.gsi.go.jp/portal/sys/v4/symbols/690.png",
+        "_iconSize": [
+          30,
+          30
+        ],
+        "_iconAnchor": [
+          15,
+          15
+        ]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          136.807642,
+          37.123155,
+          107
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "18_KP11.0付近",
+        "復旧状況（空撮）": "<img width=\"100%\" src=\"./img/kuusatsu_recovery/18_KP11.0付近.jpg\">",
+        "_markerType": "Icon",
+        "_iconUrl": "https://maps.gsi.go.jp/portal/sys/v4/symbols/687.png",
+        "_iconSize": [
+          30,
+          30
+        ],
+        "_iconAnchor": [
+          15,
+          15
+        ]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          136.840582,
+          37.131908,
+          320
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "19_KP11.0付近",
+        "復旧状況（空撮）": "<img width=\"100%\" src=\"./img/kuusatsu_recovery/19_KP11.0付近.jpg\">",
+        "_markerType": "Icon",
+        "_iconUrl": "https://maps.gsi.go.jp/portal/sys/v4/symbols/687.png",
+        "_iconSize": [
+          30,
+          30
+        ],
+        "_iconAnchor": [
+          15,
+          15
+        ]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          136.841425,
+          37.132403,
+          318
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "20_KP11.0付近",
+        "復旧状況（空撮）": "<img width=\"100%\" src=\"./img/kuusatsu_recovery/20_KP11.0付近.jpg\">",
+        "_markerType": "Icon",
+        "_iconUrl": "https://maps.gsi.go.jp/portal/sys/v4/symbols/693.png",
+        "_iconSize": [
+          30,
+          30
+        ],
+        "_iconAnchor": [
+          15,
+          15
+        ]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          136.844857,
+          37.143058,
+          235
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "21_KP11.5付近",
+        "復旧状況（空撮）": "<img width=\"100%\" src=\"./img/kuusatsu_recovery/21_KP11.5付近.jpg\">",
+        "_markerType": "Icon",
+        "_iconUrl": "https://maps.gsi.go.jp/portal/sys/v4/symbols/688.png",
+        "_iconSize": [
+          30,
+          30
+        ],
+        "_iconAnchor": [
+          15,
+          15
+        ]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          136.84026,
+          37.133065,
+          13
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "22_KP12.0付近",
+        "復旧状況（空撮）": "<img width=\"100%\" src=\"./img/kuusatsu_recovery/22_KP12.0付近.jpg\">",
+        "_markerType": "Icon",
+        "_iconUrl": "https://maps.gsi.go.jp/portal/sys/v4/symbols/688.png",
+        "_iconSize": [
+          30,
+          30
+        ],
+        "_iconAnchor": [
+          15,
+          15
+        ]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          136.843575,
+          37.1319,
+          22
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "23_KP12.0付近",
+        "復旧状況（空撮）": "<img width=\"100%\" src=\"./img/kuusatsu_recovery/23_KP12.0付近.jpg\">",
+        "_markerType": "Icon",
+        "_iconUrl": "https://maps.gsi.go.jp/portal/sys/v4/symbols/687.png",
+        "_iconSize": [
+          30,
+          30
+        ],
+        "_iconAnchor": [
+          15,
+          15
+        ]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          136.849683,
+          37.133378,
+          313
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "24_KP12.0付近",
+        "復旧状況（空撮）": "<img width=\"100%\" src=\"./img/kuusatsu_recovery/24_KP12.0付近.jpg\">",
+        "_markerType": "Icon",
+        "_iconUrl": "https://maps.gsi.go.jp/portal/sys/v4/symbols/687.png",
+        "_iconSize": [
+          30,
+          30
+        ],
+        "_iconAnchor": [
+          15,
+          15
+        ]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          136.850272,
+          37.13398,
+          308
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "25_KP11.5付近",
+        "復旧状況（空撮）": "<img width=\"100%\" src=\"./img/kuusatsu_recovery/25_KP11.5付近.jpg\">",
+        "_markerType": "Icon",
+        "_iconUrl": "https://maps.gsi.go.jp/portal/sys/v4/symbols/687.png",
+        "_iconSize": [
+          30,
+          30
+        ],
+        "_iconAnchor": [
+          15,
+          15
+        ]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          136.851235,
+          37.1353,
+          297
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "26_KP11.5付近",
+        "復旧状況（空撮）": "<img width=\"100%\" src=\"./img/kuusatsu_recovery/26_KP11.5付近.jpg\">",
+        "_markerType": "Icon",
+        "_iconUrl": "https://maps.gsi.go.jp/portal/sys/v4/symbols/688.png",
+        "_iconSize": [
+          30,
+          30
+        ],
+        "_iconAnchor": [
+          15,
+          15
+        ]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          136.839838,
+          37.132232,
+          15
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "27_KP12.0付近",
+        "復旧状況（空撮）": "<img width=\"100%\" src=\"./img/kuusatsu_recovery/27_KP12.0付近.jpg\">",
+        "_markerType": "Icon",
+        "_iconUrl": "https://maps.gsi.go.jp/portal/sys/v4/symbols/688.png",
+        "_iconSize": [
+          30,
+          30
+        ],
+        "_iconAnchor": [
+          15,
+          15
+        ]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          136.845175,
+          37.13025,
+          11
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "28_KP13.5付近",
+        "復旧状況（空撮）": "<img width=\"100%\" src=\"./img/kuusatsu_recovery/28_KP13.5付近.jpg\">",
+        "_markerType": "Icon",
+        "_iconUrl": "https://maps.gsi.go.jp/portal/sys/v4/symbols/694.png",
+        "_iconSize": [
+          30,
+          30
+        ],
+        "_iconAnchor": [
+          15,
+          15
+        ]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          136.856748,
+          37.147793,
+          283
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "29_KP13.5付近",
+        "復旧状況（空撮）": "<img width=\"100%\" src=\"./img/kuusatsu_recovery/29_KP13.5付近.jpg\">",
+        "_markerType": "Icon",
+        "_iconUrl": "https://maps.gsi.go.jp/portal/sys/v4/symbols/694.png",
+        "_iconSize": [
+          30,
+          30
+        ],
+        "_iconAnchor": [
+          15,
+          15
+        ]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          136.856763,
+          37.148583,
+          278
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "30_KP13.5付近",
+        "復旧状況（空撮）": "<img width=\"100%\" src=\"./img/kuusatsu_recovery/30_KP13.5付近.jpg\">",
+        "_markerType": "Icon",
+        "_iconUrl": "https://maps.gsi.go.jp/portal/sys/v4/symbols/692.png",
+        "_iconSize": [
+          30,
+          30
+        ],
+        "_iconAnchor": [
+          15,
+          15
+        ]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          136.849425,
+          37.153845,
+          174
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "31_KP14.5付近",
+        "復旧状況（空撮）": "<img width=\"100%\" src=\"./img/kuusatsu_recovery/31_KP14.5付近.jpg\">",
+        "_markerType": "Icon",
+        "_iconUrl": "https://maps.gsi.go.jp/portal/sys/v4/symbols/694.png",
+        "_iconSize": [
+          30,
+          30
+        ],
+        "_iconAnchor": [
+          15,
+          15
+        ]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          136.852923,
+          37.154113,
+          278
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "32_KP14.5付近",
+        "復旧状況（空撮）": "<img width=\"100%\" src=\"./img/kuusatsu_recovery/32_KP14.5付近.jpg\">",
+        "_markerType": "Icon",
+        "_iconUrl": "https://maps.gsi.go.jp/portal/sys/v4/symbols/692.png",
+        "_iconSize": [
+          30,
+          30
+        ],
+        "_iconAnchor": [
+          15,
+          15
+        ]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          136.84754,
+          37.16011,
+          197
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "33_KP14.5付近",
+        "復旧状況（空撮）": "<img width=\"100%\" src=\"./img/kuusatsu_recovery/33_KP14.5付近.jpg\">",
+        "_markerType": "Icon",
+        "_iconUrl": "https://maps.gsi.go.jp/portal/sys/v4/symbols/694.png",
+        "_iconSize": [
+          30,
+          30
+        ],
+        "_iconAnchor": [
+          15,
+          15
+        ]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          136.852485,
+          37.153515,
+          292
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "34_KP14.5付近",
+        "復旧状況（空撮）": "<img width=\"100%\" src=\"./img/kuusatsu_recovery/34_KP14.5付近.jpg\">",
+        "_markerType": "Icon",
+        "_iconUrl": "https://maps.gsi.go.jp/portal/sys/v4/symbols/688.png",
+        "_iconSize": [
+          30,
+          30
+        ],
+        "_iconAnchor": [
+          15,
+          15
+        ]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          136.843762,
+          37.150285,
+          18
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "35_KP17.0付近",
+        "復旧状況（空撮）": "<img width=\"100%\" src=\"./img/kuusatsu_recovery/35_KP17.0付近.jpg\">",
+        "_markerType": "Icon",
+        "_iconUrl": "https://maps.gsi.go.jp/portal/sys/v4/symbols/692.png",
+        "_iconSize": [
+          30,
+          30
+        ],
+        "_iconAnchor": [
+          15,
+          15
+        ]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          136.859323,
+          37.17297,
+          199
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "36_KP16.5付近",
+        "復旧状況（空撮）": "<img width=\"100%\" src=\"./img/kuusatsu_recovery/36_KP16.5付近.jpg\">",
+        "_markerType": "Icon",
+        "_iconUrl": "https://maps.gsi.go.jp/portal/sys/v4/symbols/692.png",
+        "_iconSize": [
+          30,
+          30
+        ],
+        "_iconAnchor": [
+          15,
+          15
+        ]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          136.85738,
+          37.172902,
+          181
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "37_KP16.5付近",
+        "復旧状況（空撮）": "<img width=\"100%\" src=\"./img/kuusatsu_recovery/37_KP16.5付近.jpg\">",
+        "_markerType": "Icon",
+        "_iconUrl": "https://maps.gsi.go.jp/portal/sys/v4/symbols/689.png",
+        "_iconSize": [
+          30,
+          30
+        ],
+        "_iconAnchor": [
+          15,
+          15
+        ]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          136.848828,
+          37.155152,
+          41
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "38_KP16.5付近",
+        "復旧状況（空撮）": "<img width=\"100%\" src=\"./img/kuusatsu_recovery/38_KP16.5付近.jpg\">",
+        "_markerType": "Icon",
+        "_iconUrl": "https://maps.gsi.go.jp/portal/sys/v4/symbols/687.png",
+        "_iconSize": [
+          30,
+          30
+        ],
+        "_iconAnchor": [
+          15,
+          15
+        ]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          136.85696,
+          37.15586,
+          316
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "39_KP16.5付近",
+        "復旧状況（空撮）": "<img width=\"100%\" src=\"./img/kuusatsu_recovery/39_KP16.5付近.jpg\">",
+        "_markerType": "Icon",
+        "_iconUrl": "https://maps.gsi.go.jp/portal/sys/v4/symbols/687.png",
+        "_iconSize": [
+          30,
+          30
+        ],
+        "_iconAnchor": [
+          15,
+          15
+        ]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          136.858095749984,
+          37.1567808499744,
+          306
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "40_KP16.5付近",
+        "復旧状況（空撮）": "<img width=\"100%\" src=\"./img/kuusatsu_recovery/40_KP16.5付近.jpg\">",
+        "_markerType": "Icon",
+        "_iconUrl": "https://maps.gsi.go.jp/portal/sys/v4/symbols/694.png",
+        "_iconSize": [
+          30,
+          30
+        ],
+        "_iconAnchor": [
+          15,
+          15
+        ]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          136.863453,
+          37.1632869999109,
+          288
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "41_KP16.5付近",
+        "復旧状況（空撮）": "<img width=\"100%\" src=\"./img/kuusatsu_recovery/41_KP16.5付近.jpg\">",
+        "_markerType": "Icon",
+        "_iconUrl": "https://maps.gsi.go.jp/portal/sys/v4/symbols/694.png",
+        "_iconSize": [
+          30,
+          30
+        ],
+        "_iconAnchor": [
+          15,
+          15
+        ]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          136.86393,
+          37.164453,
+          282
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "42_KP17.0付近",
+        "復旧状況（空撮）": "<img width=\"100%\" src=\"./img/kuusatsu_recovery/42_KP17.0付近.jpg\">",
+        "_markerType": "Icon",
+        "_iconUrl": "https://maps.gsi.go.jp/portal/sys/v4/symbols/694.png",
+        "_iconSize": [
+          30,
+          30
+        ],
+        "_iconAnchor": [
+          15,
+          15
+        ]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          136.864518,
+          37.16697,
+          288
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "43_KP17.0付近",
+        "復旧状況（空撮）": "<img width=\"100%\" src=\"./img/kuusatsu_recovery/43_KP17.0付近.jpg\">",
+        "_markerType": "Icon",
+        "_iconUrl": "https://maps.gsi.go.jp/portal/sys/v4/symbols/694.png",
+        "_iconSize": [
+          30,
+          30
+        ],
+        "_iconAnchor": [
+          15,
+          15
+        ]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          136.864662,
+          37.168253,
+          276
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "44_KP21.5付近",
+        "復旧状況（空撮）": "<img width=\"100%\" src=\"./img/kuusatsu_recovery/44_KP21.5付近.jpg\">",
+        "_markerType": "Icon",
+        "_iconUrl": "https://maps.gsi.go.jp/portal/sys/v4/symbols/687.png",
+        "_iconSize": [
+          30,
+          30
+        ],
+        "_iconAnchor": [
+          15,
+          15
+        ]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          136.878588,
+          37.199628,
+          319
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "45_KP21.5付近",
+        "復旧状況（空撮）": "<img width=\"100%\" src=\"./img/kuusatsu_recovery/45_KP21.5付近.jpg\">",
+        "_markerType": "Icon",
+        "_iconUrl": "https://maps.gsi.go.jp/portal/sys/v4/symbols/687.png",
+        "_iconSize": [
+          30,
+          30
+        ],
+        "_iconAnchor": [
+          15,
+          15
+        ]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          136.879282,
+          37.20013,
+          314
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "46_KP21.5付近",
+        "復旧状況（空撮）": "<img width=\"100%\" src=\"./img/kuusatsu_recovery/46_KP21.5付近.jpg\">",
+        "_markerType": "Icon",
+        "_iconUrl": "https://maps.gsi.go.jp/portal/sys/v4/symbols/687.png",
+        "_iconSize": [
+          30,
+          30
+        ],
+        "_iconAnchor": [
+          15,
+          15
+        ]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          136.87439,
+          37.198197,
+          318
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "47_KP21.5付近",
+        "復旧状況（空撮）": "<img width=\"100%\" src=\"./img/kuusatsu_recovery/47_KP21.5付近.jpg\">",
+        "_markerType": "Icon",
+        "_iconUrl": "https://maps.gsi.go.jp/portal/sys/v4/symbols/687.png",
+        "_iconSize": [
+          30,
+          30
+        ],
+        "_iconAnchor": [
+          15,
+          15
+        ]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          136.876325,
+          37.199338,
+          301
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "48_KP21.5付近",
+        "復旧状況（空撮）": "<img width=\"100%\" src=\"./img/kuusatsu_recovery/48_KP21.5付近.jpg\">",
+        "_markerType": "Icon",
+        "_iconUrl": "https://maps.gsi.go.jp/portal/sys/v4/symbols/687.png",
+        "_iconSize": [
+          30,
+          30
+        ],
+        "_iconAnchor": [
+          15,
+          15
+        ]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          136.879352,
+          37.20243,
+          307
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "49_KP21.5付近",
+        "復旧状況（空撮）": "<img width=\"100%\" src=\"./img/kuusatsu_recovery/49_KP21.5付近.jpg\">",
+        "_markerType": "Icon",
+        "_iconUrl": "https://maps.gsi.go.jp/portal/sys/v4/symbols/693.png",
+        "_iconSize": [
+          30,
+          30
+        ],
+        "_iconAnchor": [
+          15,
+          15
+        ]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          136.879285,
+          37.206082,
+          247
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "50_KPKP21.5付近",
+        "復旧状況（空撮）": "<img width=\"100%\" src=\"./img/kuusatsu_recovery/50_KPKP21.5付近.jpg\">",
+        "_markerType": "Icon",
+        "_iconUrl": "https://maps.gsi.go.jp/portal/sys/v4/symbols/693.png",
+        "_iconSize": [
+          30,
+          30
+        ],
+        "_iconAnchor": [
+          15,
+          15
+        ]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          136.877917,
+          37.207873,
+          224
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "51_KP21.5付近",
+        "復旧状況（空撮）": "<img width=\"100%\" src=\"./img/kuusatsu_recovery/51_KP21.5付近.jpg\">",
+        "_markerType": "Icon",
+        "_iconUrl": "https://maps.gsi.go.jp/portal/sys/v4/symbols/687.png",
+        "_iconSize": [
+          30,
+          30
+        ],
+        "_iconAnchor": [
+          15,
+          15
+        ]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          136.880672,
+          37.201535,
+          314
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "52_KP21.5付近",
+        "復旧状況（空撮）": "<img width=\"100%\" src=\"./img/kuusatsu_recovery/52_KP21.5付近.jpg\">",
+        "_markerType": "Icon",
+        "_iconUrl": "https://maps.gsi.go.jp/portal/sys/v4/symbols/689.png",
+        "_iconSize": [
+          30,
+          30
+        ],
+        "_iconAnchor": [
+          15,
+          15
+        ]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          136.863868,
+          37.1986,
+          51
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "53_KP23.5付近",
+        "復旧状況（空撮）": "<img width=\"100%\" src=\"./img/kuusatsu_recovery/53_KP23.5付近.jpg\">",
+        "_markerType": "Icon",
+        "_iconUrl": "https://maps.gsi.go.jp/portal/sys/v4/symbols/687.png",
+        "_iconSize": [
+          30,
+          30
+        ],
+        "_iconAnchor": [
+          15,
+          15
+        ]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          136.892046999925,
+          37.2132569998733,
+          310
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "54_KP23.5付近",
+        "復旧状況（空撮）": "<img width=\"100%\" src=\"./img/kuusatsu_recovery/54_KP23.5付近.jpg\">",
+        "_markerType": "Icon",
+        "_iconUrl": "https://maps.gsi.go.jp/portal/sys/v4/symbols/687.png",
+        "_iconSize": [
+          30,
+          30
+        ],
+        "_iconAnchor": [
+          15,
+          15
+        ]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          136.893297,
+          37.214685,
+          300
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "55_KP23.5付近",
+        "復旧状況（空撮）": "<img width=\"100%\" src=\"./img/kuusatsu_recovery/55_KP23.5付近.jpg\">",
+        "_markerType": "Icon",
+        "_iconUrl": "https://maps.gsi.go.jp/portal/sys/v4/symbols/693.png",
+        "_iconSize": [
+          30,
+          30
+        ],
+        "_iconAnchor": [
+          15,
+          15
+        ]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          136.891862,
+          37.221075,
+          221
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "56_能登大橋付近",
+        "復旧状況（空撮）": "<img width=\"100%\" src=\"./img/kuusatsu_recovery/56_能登大橋付近.jpg\">",
+        "_markerType": "Icon",
+        "_iconUrl": "https://maps.gsi.go.jp/portal/sys/v4/symbols/692.png",
+        "_iconSize": [
+          30,
+          30
+        ],
+        "_iconAnchor": [
+          15,
+          15
+        ]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          136.893778,
+          37.227077,
+          202
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "57_能登大橋付近",
+        "復旧状況（空撮）": "<img width=\"100%\" src=\"./img/kuusatsu_recovery/57_能登大橋付近.jpg\">",
+        "_markerType": "Icon",
+        "_iconUrl": "https://maps.gsi.go.jp/portal/sys/v4/symbols/687.png",
+        "_iconSize": [
+          30,
+          30
+        ],
+        "_iconAnchor": [
+          15,
+          15
+        ]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          136.897202,
+          37.219495,
+          296
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "58_能登大橋付近",
+        "復旧状況（空撮）": "<img width=\"100%\" src=\"./img/kuusatsu_recovery/58_能登大橋付近.jpg\">",
+        "_markerType": "Icon",
+        "_iconUrl": "https://maps.gsi.go.jp/portal/sys/v4/symbols/694.png",
+        "_iconSize": [
+          30,
+          30
+        ],
+        "_iconAnchor": [
+          15,
+          15
+        ]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          136.896062,
+          37.221135,
+          285
+        ]
+      }
+    }
+  ]
+}
