@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import logging
 import sqlite3
+from collections import defaultdict
 from datetime import datetime, timedelta, timezone
 from typing import Any
 
@@ -223,14 +224,21 @@ def edge_snapshot(
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     report_rows = raw_reports(connection)
     latest_by_source: dict[tuple[str, str, str], sqlite3.Row] = {}
+    latest_times: dict[tuple[str, str, str], datetime] = {}
+    non_seed_edges: set[str] = set()
     for report in report_rows:
         key = (report["edge_id"], report["source_type"], report["source_id"])
-        previous = latest_by_source.get(key)
         observed = datetime.fromisoformat(report["observed_at"].replace("Z", "+00:00"))
-        if previous is None or observed > datetime.fromisoformat(previous["observed_at"].replace("Z", "+00:00")):
+        if key not in latest_times or observed > latest_times[key]:
             latest_by_source[key] = report
+            latest_times[key] = observed
+        if report["source_type"] != "seed":
+            non_seed_edges.add(report["edge_id"])
 
     latest_ids = {row["id"] for row in latest_by_source.values()}
+    latest_by_edge: dict[str, list[sqlite3.Row]] = defaultdict(list)
+    for (edge_id, _, _), report in latest_by_source.items():
+        latest_by_edge[edge_id].append(report)
     report_payloads = [{
         "id": report["id"],
         "edge_id": report["edge_id"],
@@ -250,12 +258,9 @@ def edge_snapshot(
     edge_rows = connection.execute("SELECT * FROM edges WHERE area_id = ? ORDER BY rowid", (area_id,)).fetchall()
     edges: list[dict[str, Any]] = []
     for edge in edge_rows:
-        edge_reports = [report for report in report_rows if report["edge_id"] == edge["id"]]
-        has_non_seed_ever = any(report["source_type"] != "seed" for report in edge_reports)
+        has_non_seed_ever = edge["id"] in non_seed_edges
         evidence: list[sqlite3.Row] = []
-        for key, report in latest_by_source.items():
-            if key[0] != edge["id"]:
-                continue
+        for report in latest_by_edge[edge["id"]]:
             fresh = is_fresh(report["observed_at"], scenario_time)
             if report["source_type"] == "seed":
                 if not has_non_seed_ever and fresh:

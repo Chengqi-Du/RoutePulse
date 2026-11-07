@@ -1,16 +1,19 @@
 # OSM exercise map
 
-`map.osm` is the OSM XML extract supplied for the Anamizu exercise and stored
-with the backend so the offline importer can run without a network connection.
-The application calculates a SHA-256 fingerprint and exposes it as
-`graph_version`; it also reports the extract's declared bounds and available
-object metadata.
+`map.osm` is the canonical OSM XML source for the backend and Integration.
+It is the supplied `rescue-route-map/map.osm`, copied here so a repository
+checkout can import it offline. Its SHA-256 is
+`3aadb5e0145bd091b9f981b9da28255e758c926f5efbee26cf36901d72d9bc08`.
+Both components use `algorithm.osm_graph.build_graph`, which derives
+`graph_version` and directed edge IDs from the source bytes and conversion
+version. The checked-in `../../data/anamizu-v2` graph and scenario match it.
+The separate frontend OSM file has not yet been unified.
 
-The extract's bounds are 136.8958100–136.9237900 longitude and
-37.2223700–37.2389600 latitude. Its file metadata does not provide a single
+The extract's declared bounds are 136.8982500–136.9262300 longitude and
+37.2222500–37.2388400 latitude. Its file metadata does not provide a single
 snapshot timestamp. The latest object edit timestamp is not the same as the
-extract snapshot time. The importer currently sees 16,281 nodes, 2,602 ways,
-465 highway ways and 2,527 highway segments before one-way expansion.
+extract snapshot time. The current graph has 2,339 nodes and 4,993 directed
+edges; highway areas are excluded.
 
 The map file is from OpenStreetMap contributors and is made available under the
 Open Database License (ODbL). Credit OpenStreetMap contributors when displaying
@@ -29,8 +32,8 @@ directions must include both edge IDs in `road_observations`; a one-way segment
 has only its permitted direction. The edge IDs are returned by `/state` and are
 bound to the `graph_version`.
 
-The PRD assigns the seven-day observation frames to Integration. No frame file
-was supplied with this backend task. Once received, place it here as
-`day_templates.json` or configure `ROUTEPULSE_DAY_TEMPLATES_PATH`. It must bind
+The default frames are `../../data/anamizu-v2/seven-day-scenario.json`;
+`ROUTEPULSE_DAY_TEMPLATES_PATH` selects an alternative. The template must bind
 to the imported `graph_version` so observations cannot accidentally target a
-different OSM extract.
+different OSM extract. The frames are fictional simulations, not satellite
+observations.
