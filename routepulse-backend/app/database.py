@@ -87,7 +87,7 @@ def initialize_database() -> None:
                 area_id TEXT NOT NULL,
                 from_node_id TEXT NOT NULL,
                 to_node_id TEXT NOT NULL,
-                length_m INTEGER NOT NULL CHECK(length_m >= 0)
+                length_m REAL NOT NULL CHECK(length_m >= 0)
             );
             CREATE TABLE IF NOT EXISTS reports (
                 seq INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -111,7 +111,7 @@ def initialize_database() -> None:
                 end_node_id TEXT NOT NULL,
                 node_ids_json TEXT NOT NULL,
                 edge_ids_json TEXT NOT NULL,
-                distance_m INTEGER,
+                distance_m REAL,
                 computed_at TEXT NOT NULL,
                 trigger_type TEXT NOT NULL,
                 trigger_report_id TEXT

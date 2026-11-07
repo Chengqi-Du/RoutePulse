@@ -14,7 +14,8 @@ from pydantic import BaseModel, ConfigDict, field_validator
 
 from .config import cors_origins
 from .database import AREA_ID, SCENARIO_ID, connect, initialize_database, transaction, utc_now_iso
-from .integration import a_star, parse_question
+from algorithm.questions import parse_question
+from algorithm.routing import find_route
 
 
 logging.basicConfig(level=logging.INFO)
@@ -319,22 +320,27 @@ def compute_and_store_route(
 ) -> tuple[dict[str, Any], dict[str, Any]]:
     ensure_nodes_exist(connection, area["area_id"], start_node_id, end_node_id)
     previous = get_route(connection, area["current_route_id"])
-    path = a_star(start_node_id, end_node_id, effective_edges(connection, area))
+    path = find_route(
+        all_nodes(connection, area["area_id"]),
+        effective_edges(connection, area),
+        start_node_id,
+        end_node_id,
+    )
     route_id = next_route_id(connection)
     connection.execute(
         "INSERT INTO route_results(id, status, start_node_id, end_node_id, node_ids_json, edge_ids_json, distance_m, computed_at, trigger_type, trigger_report_id) "
         "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-        (route_id, path.status, start_node_id, end_node_id, json.dumps(path.node_ids),
-         json.dumps(path.edge_ids), path.distance_m, area["scenario_time"], trigger_type, trigger_report_id),
+        (route_id, path["status"], start_node_id, end_node_id, json.dumps(path["node_ids"]),
+         json.dumps(path["edge_ids"]), path["distance_m"], area["scenario_time"], trigger_type, trigger_report_id),
     )
     current = {
         "id": route_id,
-        "status": path.status,
+        "status": path["status"],
         "start_node_id": start_node_id,
         "end_node_id": end_node_id,
-        "node_ids": path.node_ids,
-        "edge_ids": path.edge_ids,
-        "distance_m": path.distance_m,
+        "node_ids": path["node_ids"],
+        "edge_ids": path["edge_ids"],
+        "distance_m": path["distance_m"],
         "computed_at": area["scenario_time"],
         "trigger": {"type": trigger_type, "report_id": trigger_report_id},
     }
@@ -440,7 +446,7 @@ def create_route(area_id: str, body: RouteRequest) -> dict[str, int]:
             return {"version": version}
 
 
-@app.post("/api/areas/{area_id}/reports")
+@app.post("/api/areas/{area_id}/reports", status_code=201)
 def create_report(area_id: str, body: ReportRequest) -> dict[str, Any]:
     with connect() as connection:
         with transaction(connection):
