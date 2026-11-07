@@ -4,6 +4,7 @@ import { cpSync, mkdirSync } from 'node:fs'
 import { resolve } from 'node:path'
 
 export default defineConfig({
+  server: { proxy: { '/api': 'http://localhost:9000' } },
   plugins: [react(), {
     name: 'copy-map-assets',
     apply: 'build',
