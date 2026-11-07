@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RoutePulse 七天模拟路况</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font: 14px/1.5 system-ui, sans-serif; color: #17212b; }
+    header { padding: 10px 16px; background: #fff3d3; }
+    h1 { margin: 0; font-size: 19px; }
+    p { margin: 4px 0; }
+    nav { padding: 10px 16px; display: flex; flex-wrap: wrap; gap: 6px; }
+    button { padding: 7px 12px; font: inherit; border: 1px solid #8794a2; border-radius: 5px; background: white; cursor: pointer; }
+    button[aria-pressed="true"] { color: white; background: #174e82; }
+    button:disabled { opacity: .5; cursor: not-allowed; }
+    main { padding: 0 16px 16px; display: grid; grid-template-columns: minmax(0, 3fr) minmax(260px, 1fr); gap: 12px; }
+    #map { height: 72vh; min-height: 360px; }
+    aside { overflow-wrap: anywhere; }
+    #selected { white-space: pre-wrap; background: #f0f3f6; padding: 8px; }
+    #status, #tile-status { padding: 0 16px; color: #9c1c18; }
+    .legend { display: flex; gap: 14px; flex-wrap: wrap; }
+    .dot { display: inline-block; width: 14px; height: 14px; border-radius: 50%; vertical-align: middle; }
+    .open { background: #087c36; }
+    .blocked { background: #c5222a; }
+    @media (max-width: 800px) { main { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>穴水町：七天模拟路况</h1>
+    <p>SIMULATION ONLY — Not for real-world rescue navigation.</p>
+    <p>红绿道路是虚构的每日观察，不是真实地震路况、卫星识别或车辆通行保证；此页面未合并人工报告。</p>
+  </header>
+  <nav id="days" aria-label="选择模拟日期"></nav>
+  <div id="status" role="status" aria-live="polite"></div>
+  <div id="tile-status" role="status" aria-live="polite"></div>
+  <main>
+    <div id="map" aria-label="七天模拟道路地图"></div>
+    <aside>
+      <div class="legend">
+        <span><span class="dot blocked"></span> 模拟封闭</span>
+        <span><span class="dot open"></span> 模拟开放</span>
+      </div>
+      <h2 id="date">正在加载数据</h2>
+      <div id="summary" aria-live="polite"></div>
+      <p>计数按物理小路段而不是 OSM way；同一小路段的双向边具有相同模拟状态。</p>
+      <p>请点击地图上的路段查看 OSM way ID 和对应的有向边 ID。</p>
+      <div id="selected">尚未选择路段。</div>
+      <p>截图中的白路是否全部覆盖仍需人工核验。地图来源：OpenStreetMap；OSM 数据不是已验证的 2024 年灾时快照。</p>
+    </aside>
+  </main>
+  <script>
+    const status = document.getElementById('status');
+    const tileStatus = document.getElementById('tile-status');
+    const dayControls = document.getElementById('days');
+    const dateLabel = document.getElementById('date');
+    const summary = document.getElementById('summary');
+    const selected = document.getElementById('selected');
+    const buttons = [];
+
+    if (typeof L === 'undefined') {
+      status.textContent = '地图组件加载失败，请检查网络连接并刷新。';
+    } else {
+      const map = L.map('map', { preferCanvas: true }).setView([37.23111, 136.90830], 16);
+      const tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>'
+      }).addTo(map);
+      tiles.on('tileerror', () => {
+        tileStatus.textContent = '部分地图瓦片加载失败；请检查网络连接。道路颜色仍是模拟数据。';
+      });
+
+      async function readJson(path) {
+        const response = await fetch(path);
+        if (!response.ok) throw new Error(`${path}: HTTP ${response.status}`);
+        return response.json();
+      }
+
+      function showScenario(graph, scenario) {
+        if (!graph || typeof graph.graph_version !== 'string' || !Array.isArray(graph.edges) ||
+            !scenario || scenario.graph_version !== graph.graph_version ||
+            scenario.scenario_profile !== 'severe_damage_v2' || scenario.simulation_only !== true ||
+            !Array.isArray(scenario.days) || scenario.days.length !== 7) {
+          throw new Error('路网版本、场景类型或七天数据不匹配。');
+        }
+        const physical = new Map();
+        const graphEdgeIds = new Set();
+        for (const edge of graph.edges) {
+          if (typeof edge.id !== 'string' || graphEdgeIds.has(edge.id) ||
+              !edge.geometry || edge.geometry.type !== 'LineString' ||
+              !Array.isArray(edge.geometry.coordinates) || edge.geometry.coordinates.length < 2) {
+            throw new Error('路网包含重复 ID 或无效的道路几何。');
+          }
+          graphEdgeIds.add(edge.id);
+          const separator = edge.id.lastIndexOf(':');
+          const direction = edge.id.slice(separator + 1);
+          if (separator < 0 || !['f', 'r'].includes(direction)) {
+            throw new Error(`道路方向 ID 无效：${edge.id}`);
+          }
+          const key = edge.id.slice(0, separator);
+          if (!physical.has(key)) {
+            physical.set(key, { geometry: edge.geometry, wayId: edge.osm_way_id, edgeIds: [] });
+          }
+          physical.get(key).edgeIds.push(edge.id);
+        }
+        const states = scenario.days.map((day, index) => {
+          if (day.day_index !== index + 1 || day.graph_version !== graph.graph_version ||
+              day.observations_are_simulated !== true || !Array.isArray(day.road_observations) ||
+              day.road_observations.length !== graphEdgeIds.size) {
+            throw new Error(`第 ${index + 1} 天的数据不完整。`);
+          }
+          const edgeStates = new Map();
+          for (const observation of day.road_observations) {
+            if (!graphEdgeIds.has(observation.edge_id) || edgeStates.has(observation.edge_id) ||
+                !['reported_open', 'reported_blocked'].includes(observation.status)) {
+              throw new Error(`第 ${index + 1} 天包含重复、未知或无效的道路状态。`);
+            }
+            edgeStates.set(observation.edge_id, observation.status);
+          }
+          const result = new Map();
+          for (const [key, road] of physical) {
+            const values = new Set(road.edgeIds.map(id => edgeStates.get(id)));
+            if (values.size !== 1) throw new Error(`第 ${index + 1} 天的双向路段状态不一致。`);
+            result.set(key, values.values().next().value);
+          }
+          return result;
+        });
+
+        const features = [...physical].map(([key, road]) => ({
+          type: 'Feature',
+          geometry: road.geometry,
+          properties: { key, wayId: road.wayId, edgeIds: road.edgeIds }
+        }));
+        let currentDay = 0;
+        let selectedFeature = null;
+        const roads = L.geoJSON({ type: 'FeatureCollection', features }, {
+          style: feature => ({
+            color: states[currentDay].get(feature.properties.key) === 'reported_open' ? '#087c36' : '#c5222a',
+            weight: 4,
+            opacity: 0.9
+          }),
+          onEachFeature: (feature, layer) => {
+            layer.on('click', () => {
+              selectedFeature = feature.properties;
+              showSelected();
+            });
+          }
+        }).addTo(map);
+
+        function showSelected() {
+          if (!selectedFeature) return;
+          const label = states[currentDay].get(selectedFeature.key) === 'reported_open' ? '模拟开放' : '模拟封闭';
+          selected.textContent = `第 ${currentDay + 1} 天：${label}\nOSM way：${selectedFeature.wayId}\n` +
+            `物理路段：${selectedFeature.key}\n\n有向 edge ID：\n${selectedFeature.edgeIds.join('\n')}`;
+        }
+
+        function selectDay(index) {
+          currentDay = index;
+          const state = states[index];
+          const previous = index > 0 ? states[index - 1] : null;
+          let open = 0;
+          let newlyOpen = 0;
+          let newlyBlocked = 0;
+          for (const [key, value] of state) {
+            if (value === 'reported_open') open++;
+            if (previous && value === 'reported_open' && previous.get(key) === 'reported_blocked') newlyOpen++;
+            if (previous && value === 'reported_blocked' && previous.get(key) === 'reported_open') newlyBlocked++;
+          }
+          roads.eachLayer(layer => {
+            const isOpen = state.get(layer.feature.properties.key) === 'reported_open';
+            layer.setStyle({ color: isOpen ? '#087c36' : '#c5222a', weight: isOpen ? 5 : 4 });
+            if (isOpen) layer.bringToFront();
+          });
+          for (let i = 0; i < buttons.length; i++) buttons[i].setAttribute('aria-pressed', String(i === index));
+          dateLabel.textContent = `第 ${index + 1} 天（模拟日期 ${scenario.days[index].scenario_date_local}）`;
+          const percent = (100 * open / physical.size).toFixed(2);
+          summary.textContent = `物理路段：开放 ${open} 条（${percent}%），封闭 ${physical.size - open} 条。` +
+            (previous ? ` 与前一天相比：新开放 ${newlyOpen} 条，新封闭 ${newlyBlocked} 条。` : ' 第一天为模拟基准。');
+          showSelected();
+        }
+
+        for (let index = 0; index < 7; index++) {
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.textContent = `第 ${index + 1} 天`;
+          button.addEventListener('click', () => selectDay(index));
+          dayControls.appendChild(button);
+          buttons.push(button);
+        }
+        selectDay(0);
+      }
+
+      Promise.all([
+        readJson('../data/anamizu-v2/graph.json'),
+        readJson('../data/anamizu-v2/seven-day-scenario.json')
+      ]).then(([graph, scenario]) => showScenario(graph, scenario)).catch(error => {
+        console.error(error);
+        status.textContent = `七天模拟数据加载失败：${error.message} 请按 README 使用本地服务器。`;
+      });
+    }
+  </script>
+</body>
+</html>

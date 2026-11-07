@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RoutePulse 道路覆盖核对</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font: 14px/1.5 system-ui, sans-serif; color: #17212b; }
+    header { padding: 10px 16px; background: #fff3d3; }
+    h1 { margin: 0; font-size: 19px; }
+    p { margin: 5px 0; }
+    .controls { display: flex; flex-wrap: wrap; gap: 12px; padding: 10px 16px; }
+    main { display: grid; grid-template-columns: minmax(0, 3fr) minmax(260px, 2fr); gap: 10px; padding: 0 16px 16px; }
+    #map { height: 72vh; min-height: 360px; }
+    aside { overflow: auto; max-height: 72vh; }
+    #reference { max-width: 100%; height: auto; }
+    #selected { white-space: pre-wrap; overflow-wrap: anywhere; background: #f0f3f6; padding: 8px; }
+    #status, #tile-status { padding: 0 16px 8px; color: #8a1b18; }
+    @media (max-width: 800px) { main { grid-template-columns: 1fr; } aside { max-height: none; } }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>OSM 道路覆盖人工核对</h1>
+    <p>SIMULATION ONLY — Not for real-world rescue navigation. 道路颜色仅用于核对，不表示通行状态。</p>
+    <p>截图没有地理配准：请逐段对照并填写 CSV，不能以页面上的线条数量证明全部白路已覆盖。</p>
+  </header>
+  <div class="controls">
+    <label>导入 roads-for-review.geojson：<input id="road-file" type="file" accept=".geojson,.json,application/geo+json,application/json"></label>
+    <label>选择参考截图：<input id="image-file" type="file" accept="image/*"></label>
+    <button id="show-extent" type="button" disabled>查看道路数据全范围</button>
+    <button id="show-center" type="button">查看截图区域附近</button>
+  </div>
+  <div id="status" role="status" aria-live="polite"></div>
+  <div id="tile-status" role="status" aria-live="polite"></div>
+  <main>
+    <div id="map" aria-label="OSM 道路核对地图"></div>
+    <aside>
+      <p>点击地图线条，查看 way ID 与所有对应的有向 edge ID。紫色表示 path、footway 或 steps；蓝色表示其他道路。</p>
+      <div id="selected">尚未选择道路。</div>
+      <h2>参考截图</h2>
+      <p>截图只在本机浏览器显示，不会自动识别或保存核对结果。</p>
+      <img id="reference" alt="用户选择的道路参考截图">
+    </aside>
+  </main>
+  <script>
+    const status = document.getElementById('status');
+    const tileStatus = document.getElementById('tile-status');
+    const selected = document.getElementById('selected');
+    const roadFile = document.getElementById('road-file');
+    const imageFile = document.getElementById('image-file');
+    const reference = document.getElementById('reference');
+    const showExtent = document.getElementById('show-extent');
+    const showCenter = document.getElementById('show-center');
+    let imageUrl = null;
+    imageFile.addEventListener('change', () => {
+      if (imageUrl) URL.revokeObjectURL(imageUrl);
+      imageUrl = imageFile.files.length ? URL.createObjectURL(imageFile.files[0]) : null;
+      if (imageUrl) reference.src = imageUrl;
+      else reference.removeAttribute('src');
+    });
+
+    if (typeof L === 'undefined') {
+      status.textContent = '地图组件加载失败，请检查网络后刷新。';
+      roadFile.disabled = true;
+      showCenter.disabled = true;
+    } else {
+      const map = L.map('map').setView([37.23111, 136.90830], 16);
+      const tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>'
+      }).addTo(map);
+      tiles.on('tileerror', () => {
+        tileStatus.textContent = '部分地图瓦片加载失败；请检查网络连接，不能据空白底图完成核对。';
+      });
+      let roads = null;
+      showExtent.addEventListener('click', () => {
+        if (roads) map.fitBounds(roads.getBounds(), { padding: [12, 12] });
+      });
+      showCenter.addEventListener('click', () => map.setView([37.23111, 136.90830], 16));
+      function showRoads(data, fitToRoads = false) {
+        if (data.type !== 'FeatureCollection' || !Array.isArray(data.features) || !data.features.length ||
+            typeof data.graph_version !== 'string') {
+          throw new Error('不是有效的 RoutePulse 道路 GeoJSON。');
+        }
+        const layer = L.geoJSON(data, {
+          style: feature => ({
+            color: ['path', 'footway', 'steps'].includes(feature.properties.highway) ? '#aa1fd4' : '#0079d3',
+            weight: 4,
+            opacity: 0.85
+          }),
+          onEachFeature: (feature, line) => {
+            line.on('click', () => {
+              const info = feature.properties;
+              if (!info || typeof info.osm_way_id !== 'string' || !Array.isArray(info.edge_ids)) {
+                status.textContent = '选中道路缺少 way ID 或 edge ID，请检查导出的文件。';
+                return;
+              }
+              selected.textContent = `图版本：${data.graph_version}\nway ID：${info.osm_way_id}\n` +
+                `道路类型：${info.highway}\n方向依据：${info.direction_basis}\n\n有向 edge IDs：\n${info.edge_ids.join('\n')}`;
+            });
+          }
+        });
+        if (!layer.getBounds().isValid()) throw new Error('道路数据没有可用几何。');
+        if (roads) map.removeLayer(roads);
+        roads = layer.addTo(map);
+        showExtent.disabled = false;
+        if (fitToRoads) map.fitBounds(roads.getBounds(), { padding: [12, 12] });
+        selected.textContent = `图版本：${data.graph_version}\n已加载 ${data.features.length} 条 OSM way；截图覆盖仍未核验。`;
+        status.textContent = '';
+      }
+      roadFile.addEventListener('change', async () => {
+        if (!roadFile.files.length) return;
+        try {
+          showRoads(JSON.parse(await roadFile.files[0].text()), true);
+        } catch (error) {
+          console.error(error);
+          status.textContent = `道路文件加载失败：${error.message}`;
+        }
+      });
+      fetch('../data/anamizu-v1/roads-for-review.geojson')
+        .then(response => {
+          if (!response.ok) throw new Error(`HTTP ${response.status}`);
+          return response.json();
+        })
+        .then(data => {
+          if (!roadFile.files.length) showRoads(data);
+        })
+        .catch(error => {
+          console.error(error);
+          if (!roadFile.files.length) {
+            status.textContent = '默认道路文件加载失败；请手动选择 roads-for-review.geojson，并使用本地服务器打开页面。';
+          }
+        });
+    }
+  </script>
+</body>
+</html>
