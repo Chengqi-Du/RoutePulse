@@ -1,0 +1,281 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>道路：令和６年能登半島地震　道路復旧見える化マップ - 国土交通省</title>
+  <!--
+<link rel="stylesheet" href="https://unpkg.com/leaflet@0.7.3/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@0.7.3/dist/leaflet.js"></script>
+-->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+  <style>
+    body {
+      padding: 0;
+      margin: 0
+    }
+
+    html,
+    body,
+    #mapdiv {
+      height: 100%;
+      width: 100%;
+    }
+
+    .leaflet-container {
+      background: #fff;
+    }
+
+    .leaflet-div-icon {
+      background: none;
+      white-space: nowrap;
+      border: none;
+    }
+
+    .leaflet-popup-content {
+      width: 300px;
+    }
+
+    iframe {
+      @media screen and (max-width:960px) {
+        width: 300px;
+        height: 169px;
+      }
+
+      @media screen and (min-width:960px) {
+        width: 600px;
+        height: 338px;
+      }
+    }
+  </style>
+</head>
+
+
+<body>
+  <div id="mapdiv">
+    <script>
+      function geojson_style(prop) {
+        var s = {};
+        for (name in prop) {
+          if (name.match(/^_/) && !name.match(/_markerType/)) {
+            if (prop['_markerType'] == 'Circle' && name == '_radius') { continue; }
+            s[name.substr(1)] = prop[name];
+          }
+        }
+        return s;
+      }
+
+      function popup_properties(prop) {
+        var s = ''
+        for (name in prop) {
+          if (!name.match(/^_/)) {
+            s += name + "：" + prop[name] + "<br>";
+          }
+        }
+        return s;
+      }
+
+      //
+      // 地図データ（GeoJson）を追加する場合は、ここの配列にデータを追加します。
+      //   キー名はレイヤー名としてください。（日本語指定も可）
+      //   キーに関連する値は以下となります。
+      //     geojson : JSONファイルのURI（パス）
+      //     zindex : 重なった場合の重ね順。zindexは数値が大きいほど上に表示される。
+      //       https://developer.mozilla.org/ja/docs/Web/CSS/z-index
+      //     checked : チェックボックスを選択状態にする場合はtrueにする。
+      // 地図表示に関するドキュメントはLeafletを参照。
+      //   https://leafletjs.com/
+      //
+      var targetLayers = {
+        '緊急復旧済み区間': {
+          'geojson': './json/emergency_restored_section.geojson',
+          'zindex': 0,
+          'checked': true
+        },
+        '復旧到達地点': {
+          'geojson': './json/recovery_point.geojson',
+          'zindex': 0,
+          'checked': true
+        },
+        '被災状況と復旧状況の比較': {
+          'geojson': './json/keikai.geojson',
+          'zindex': 8000,
+          'checked': true
+        },
+        '復旧状況（空撮）': {
+          'geojson': './json/recovery_situation_aerial_photography.geojson',
+          'zindex': 7000,
+          'checked': true
+        },
+        '緊急復旧した道路の利用状況': {
+          'geojson': './json/riyou.geojson',
+          'zindex': 9000,
+          'checked': true
+        },
+        '道の駅の状況': {
+          'geojson': './json/michinoeki.geojson',
+          'zindex': 6000,
+          'checked': false
+        },
+        '啓開作業状況（動画）': {
+          'geojson': './json/douga.geojson',
+          'zindex': 5000,
+          'checked': false
+        },
+        '市町道路の状況把握結果（TEC-FORCE活動報告）': {
+          'geojson': './json/municipal_road_investigation.geojson',
+          'zindex': 4000,
+          'checked': false
+        },
+        '主な被災箇所': {
+          'geojson': './json/damaged_area.geojson',
+          'zindex': 3000,
+          'checked': false
+        },
+        '被災状況（360度画像/三次元点群データ）': {
+          'geojson': './json/spherical_image.geojson',
+          'zindex': 3000,
+          'checked': false
+        },
+        '被災状況（空撮）': {
+          'geojson': './json/damage_situation_aerial_photography.geojson',
+          'zindex': 2000,
+          'checked': false
+        },
+        '都市間所要時間（金沢市・七尾市から輪島市・珠洲市・能登町）': {
+          'geojson': './json/intercity_travel_time.geojson',
+          'zindex': 10000,
+          'checked': false
+        },
+        'ETC2.0速度データ(平均速度)': {
+          'geojson': './json/ETC2.0_speed_data.geojson',
+          'zindex': 0,
+          'checked': false
+        },
+        '500m人口メッシュデータ': {
+          'geojson': './json/population_mesh_data.geojson',
+          'zindex': 0,
+          'checked': false
+        }
+      };
+
+      const checkedOverlays = {};
+      const uncheckedOverlays = {};
+      const layers = [];
+      var keyIndex = 1;
+
+      Object.keys(targetLayers).forEach(key => {
+        var geojson = targetLayers[key]['geojson'];
+        var zindex = targetLayers[key]['zindex'];
+        var checked = targetLayers[key]['checked'];
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', geojson, false);
+        xhr.send(null);
+        var geodata = JSON.parse(xhr.responseText);
+
+        var newLayer = L.geoJson(geodata, {
+          pointToLayer: function (feature, latlng) {
+            var s = geojson_style(feature.properties);
+            if (feature.properties['_markerType'] == 'Icon') {
+              var myIcon = L.icon(s);
+              return L.marker(latlng, { icon: myIcon, zIndexOffset: zindex });
+            }
+            if (feature.properties['_markerType'] == 'DivIcon') {
+              var myIcon = L.divIcon(s);
+              return L.marker(latlng, { icon: myIcon, zIndexOffset: zindex });
+            }
+            if (feature.properties['_markerType'] == 'Circle') {
+              return L.circle(latlng, feature.properties['_radius'], s);
+            }
+            if (feature.properties['_markerType'] == 'CircleMarker') {
+              return L.circleMarker(latlng, s);
+            }
+          },
+          style: function (feature) {
+            if (!feature.properties['_markerType']) {
+              var s = geojson_style(feature.properties);
+              return s;
+            }
+          },
+          onEachFeature: function (feature, layer) {
+            layer.bindPopup(popup_properties(feature.properties));
+          }
+        });
+        var ki = ('00' + keyIndex).slice(-2);
+        const newKey = ki + ". " + key;
+        keyIndex++;
+        if (checked) {
+          checkedOverlays[newKey] = newLayer;
+          layers.push(newLayer);
+        } else {
+          uncheckedOverlays[newKey] = newLayer;
+        }
+      });
+
+
+      // 背景地図設定
+      var std = L.tileLayer(
+        'https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png',
+        {
+          attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル</a>",
+          maxNativeZoom: 18,
+          maxZoom: 18,
+          opacity: 1
+        }
+      );
+      layers.push(std);
+
+      // オーバレイ地図設定
+      var photo1 = L.tileLayer(
+        'https://cyberjapandata.gsi.go.jp/xyz/20240102noto_0405_0426do/{z}/{x}/{y}.png',
+        {
+          maxNativeZoom: 18,
+          maxZoom: 18,
+          opacity: 1
+        }
+      );
+
+
+      //レイヤコントロールパネルの設定。モバイルブラウザでは畳んで表示する。
+      var collapsed = false;
+      if (L.Browser.mobile) {
+        collapsed = true;
+      }
+
+      // 中心位置設定
+      var map = L.map('mapdiv', {
+        center: [37.282030, 137.000610], zoom: 10, layers: layers
+      });
+
+      L.control.scale({ imperial: false }).addTo(map);
+      var baseLayers = { "地理院タイル（標準地図）": std };
+      var dummyLayers = { "正射画像の表示": std };
+      var overLayers = {
+        "能登地区（4/5～4/26撮影）": photo1
+      };
+      L.control.layers(dummyLayers, overLayers, { collapsed: collapsed }).addTo(map);
+
+
+      // ベースとなるレイヤー（地図）と、初期表示させるレイヤーを指定する。
+      const layerControl = L.control.layers(baseLayers, checkedOverlays, {
+        position: 'topright',
+        collapsed: collapsed,
+        autoZIndex: false,
+        sortLayers: true
+      }).addTo(map);
+
+      // チェックしないレイヤーを追加
+      Object.keys(uncheckedOverlays).forEach(key => {
+        const uncheckedOverlay = uncheckedOverlays[key];
+        layerControl.addOverlay(uncheckedOverlay, key);
+      });
+    </script>
+</body>
+
+</html>

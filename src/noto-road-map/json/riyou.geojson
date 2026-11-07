@@ -1,0 +1,294 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "緊急復旧した道路の利用状況",
+        "撮影日": "2024/02/02",
+        "利用状況": "<img width=\"100%\" src=\"./img/riyou/240202_riyou_anamizuic.png\">",
+        "利用状況": "<img width=\"100%\" src=\"./img/riyou/240202_riyou_anamizuic-2.png\">",
+        "_markerType": "Icon",
+        "_iconUrl": "https://maps.gsi.go.jp/portal/sys/v4/symbols/537.png",
+        "_iconSize": [
+          30,
+          30
+        ],
+        "_iconAnchor": [
+          15,
+          15
+        ]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          136.898552,
+          37.24166,
+          12.3
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "緊急復旧した道路の利用状況",
+        "撮影日": "2024/02/02",
+        "利用状況": "<img width=\"100%\" src=\"./img/riyou/240215_riyou_koshinoharaic.png\">",
+        "利用状況": "<img width=\"100%\" src=\"./img/riyou/240202_riyou_anamizuic-2.png\">",
+        "_markerType": "Icon",
+        "_iconUrl": "https://maps.gsi.go.jp/portal/sys/v4/symbols/537.png",
+        "_iconSize": [
+          30,
+          30
+        ],
+        "_iconAnchor": [
+          15,
+          15
+        ]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          136.878604,
+          37.210529,
+          147.1
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "緊急復旧した道路の利用状況",
+        "撮影日": "2024/02/15",
+        "利用状況": "<img width=\"100%\" src=\"./img/riyou/240215_riyou_satoyamakaido.JPG\">",
+        "_markerType": "Icon",
+        "_iconUrl": "https://maps.gsi.go.jp/portal/sys/v4/symbols/537.png",
+        "_iconSize": [
+          30,
+          30
+        ],
+        "_iconAnchor": [
+          15,
+          15
+        ]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          136.85589,
+          37.187602,
+          211
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "緊急復旧した道路の利用状況",
+        "撮影日": "2024/04/22",
+        "利用状況": "<img width=\"100%\" src=\"./img/riyou/240422_riyou_satoyamakaido.JPG\">",
+        "_markerType": "Icon",
+        "_iconUrl": "https://maps.gsi.go.jp/portal/sys/v4/symbols/537.png",
+        "_iconSize": [
+          30,
+          30
+        ],
+        "_iconAnchor": [
+          15,
+          15
+        ]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          136.82367,
+          37.07759,
+          110
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "緊急復旧した道路の利用状況",
+        "撮影日": "2024/04/22",
+        "利用状況": "<img width=\"100%\" src=\"./img/riyou/240422_riyou_satoyamakaido-2.JPG\">",
+        "_markerType": "Icon",
+        "_iconUrl": "https://maps.gsi.go.jp/portal/sys/v4/symbols/537.png",
+        "_iconSize": [
+          30,
+          30
+        ],
+        "_iconAnchor": [
+          15,
+          15
+        ]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          136.850046,
+          37.148565,
+          153.3
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "緊急復旧した道路の利用状況",
+        "撮影日": "2024/04/22",
+        "利用状況": "<img width=\"100%\" src=\"./img/riyou/240422_riyou_satoyamakaido-3.JPG\">",
+        "_markerType": "Icon",
+        "_iconUrl": "https://maps.gsi.go.jp/portal/sys/v4/symbols/537.png",
+        "_iconSize": [
+          30,
+          30
+        ],
+        "_iconAnchor": [
+          15,
+          15
+        ]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          136.877761,
+          37.209153,
+          150.3
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "緊急復旧した道路の利用状況",
+        "撮影日": "2024/04/22",
+        "利用状況": "<img width=\"100%\" src=\"./img/riyou/240422_riyou_satoyamakaido-4.JPG\">",
+        "_markerType": "Icon",
+        "_iconUrl": "https://maps.gsi.go.jp/portal/sys/v4/symbols/537.png",
+        "_iconSize": [
+          30,
+          30
+        ],
+        "_iconAnchor": [
+          15,
+          15
+        ]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          136.832209,
+          37.136186,
+          53.1
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "緊急復旧した道路の利用状況",
+        "撮影日": "2024/04/22",
+        "利用状況": "<img width=\"100%\" src=\"./img/riyou/240422_riyou_satoyamakaido-5.JPG\">",
+        "_markerType": "Icon",
+        "_iconUrl": "https://maps.gsi.go.jp/portal/sys/v4/symbols/537.png",
+        "_iconSize": [
+          30,
+          30
+        ],
+        "_iconAnchor": [
+          15,
+          15
+        ]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          136.890995,
+          37.221348,
+          80.4
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "緊急復旧した道路の利用状況",
+        "撮影日": "2024/05/02",
+        "利用状況": "<img width=\"100%\" src=\"./img/riyou/240502_riyou_R249_noda.JPG\">",
+        "利用状況": "<img width=\"100%\" src=\"./img/riyou/240502_riyou_R249_noda-2.JPG\">",
+        "_markerType": "Icon",
+        "_iconUrl": "https://maps.gsi.go.jp/portal/sys/v4/symbols/537.png",
+        "_iconSize": [
+          30,
+          30
+        ],
+        "_iconAnchor": [
+          15,
+          15
+        ]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          137.00452,
+          37.428196,
+          12.6
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "緊急復旧した道路の利用状況",
+        "撮影日": "2024/01/16",
+        "緊急車両の通行状況": "<img width=\"100%\" src=\"./img/riyou/240116_riyou_K57_tenzaka.png\"><img width=\"100%\" src=\"./img/riyou/240116_riyou_K57_tenzaka-2.png\">",
+        "_markerType": "Icon",
+        "_iconUrl": "https://maps.gsi.go.jp/portal/sys/v4/symbols/537.png",
+        "_iconSize": [
+          30,
+          30
+        ],
+        "_iconAnchor": [
+          15,
+          15
+        ]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          137.10094,
+          37.35151,
+          64
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "緊急復旧した道路の利用状況",
+        "撮影日": "2024/01/16",
+        "緊急車両の通行状況": "<img width=\"100%\" src=\"./img/riyou/240116_riyou_K275_nakasai.png\">",
+        "_markerType": "Icon",
+        "_iconUrl": "https://maps.gsi.go.jp/portal/sys/v4/symbols/562.png",
+        "_iconSize": [
+          30,
+          30
+        ],
+        "_iconAnchor": [
+          15,
+          15
+        ]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          137.01946,
+          37.334539,
+          228
+        ]
+      }
+    }
+  ]
+}
