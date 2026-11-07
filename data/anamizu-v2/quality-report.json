@@ -1,0 +1,76 @@
+{
+  "graph_version": "osm-v1-07e5b19979d27e0cfa4b4497",
+  "source_sha256": "3aadb5e0145bd091b9f981b9da28255e758c926f5efbee26cf36901d72d9bc08",
+  "declared_bounds": {
+    "minlat": 37.22225,
+    "minlon": 136.89825,
+    "maxlat": 37.23884,
+    "maxlon": 136.92623
+  },
+  "input_counts": {
+    "node": 16387,
+    "way": 2591,
+    "relation": 32
+  },
+  "highway_way_count": 460,
+  "highway_way_counts": {
+    "footway": 55,
+    "motorway": 6,
+    "motorway_link": 7,
+    "path": 20,
+    "primary": 19,
+    "residential": 74,
+    "secondary": 6,
+    "service": 38,
+    "steps": 4,
+    "tertiary": 19,
+    "track": 11,
+    "trunk": 16,
+    "unclassified": 185
+  },
+  "direction_basis_counts": {
+    "assumed_motorway_oneway": 2,
+    "assumed_two_way": 442,
+    "explicit_oneway": 16
+  },
+  "graph_node_count": 2339,
+  "directed_edge_count": 4993,
+  "excluded_area_way_ids": [],
+  "complex_direction_way_ids": [],
+  "turn_restriction_relation_count": 7,
+  "missing_turn_restriction_members": [
+    {
+      "relation_id": "18085123",
+      "type": "way",
+      "ref": "189036401",
+      "role": "from"
+    },
+    {
+      "relation_id": "18085123",
+      "type": "way",
+      "ref": "478068156",
+      "role": "to"
+    },
+    {
+      "relation_id": "18085124",
+      "type": "way",
+      "ref": "478068156",
+      "role": "from"
+    },
+    {
+      "relation_id": "18085125",
+      "type": "way",
+      "ref": "478068156",
+      "role": "to"
+    }
+  ],
+  "screenshot_coverage": "not_verified",
+  "warnings": [
+    "Simulation only; this graph is not for real-world rescue navigation.",
+    "Screenshot coverage and road passability are not established by this export.",
+    "Turn restrictions and vehicle-specific access are not enforced.",
+    "Untagged ordinary ways are assumed two-way; untagged motorway links are assumed one-way.",
+    "Conditional and mode-specific direction tags are retained but not enforced.",
+    "Object edit timestamps do not establish the dataset snapshot time."
+  ]
+}
