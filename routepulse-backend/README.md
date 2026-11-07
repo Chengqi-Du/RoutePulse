@@ -2,7 +2,10 @@
 
 Simulation-only FastAPI backend generated from the supplied API contract and backend PRD. It implements the six contract endpoints, stores state in SQLite, and imports the shared pure routing and question modules from `algorithm/`.
 
-The fixed map is only a simulated road network. A route is the shortest-distance candidate under current simulated reports; it is not a safety assessment or real-world rescue navigation. The frontend should always display:
+The default legacy map is a simulated road network. The optional Anamizu mode
+uses OSM road geometry with fictional simulated road conditions. A route is
+the shortest-distance candidate under current simulated reports; it is not a
+safety assessment or real-world rescue navigation. The frontend should always display:
 
 > SIMULATION ONLY — Not for real-world rescue navigation.
 
@@ -47,9 +50,18 @@ ROUTEPULSE_DB_PATH=./work/anamizu-7day.sqlite3 \
 PYTHONPATH=.. python -m uvicorn app.main:app --reload --port 8000
 ```
 
-On first startup this mode imports `data/map.osm` into its own SQLite database.
-It uses OSM highway ways as directed, node-to-node candidate edges and returns
-each edge's GeoJSON LineString geometry. The graph starts with unknown road
+On first startup this mode imports the shared `data/map.osm` into its own
+SQLite database, using the same `algorithm.osm_graph.build_graph` converter
+as Integration. The checked-in `../data/anamizu-v2/seven-day-scenario.json`
+is the default daily observation file and uses that graph's exact version and
+directed edge IDs. The source OSM SHA-256 is
+`3aadb5e0145bd091b9f981b9da28255e758c926f5efbee26cf36901d72d9bc08`.
+The separate frontend map has not been changed and is not yet unified or
+connected to this backend.
+
+The importer uses OSM highway ways as directed, node-to-node candidate edges,
+excluding highway areas, and returns each edge's GeoJSON LineString geometry.
+The graph starts with unknown road
 conditions: an OSM road on the map is not evidence that it is passable after an
 earthquake. Turn restrictions are currently not applied, and the screenshot
 coverage has not been verified. Read `data/README.md` before presenting the map.
@@ -57,11 +69,9 @@ coverage has not been verified. Read `data/README.md` before presenting the map.
 `POST /api/areas/area-a/reports/batch` adds a validated group of manual reports
 atomically. In this mode a successful manual report advances `scenario_time` by
 one second. `POST /api/areas/area-a/advance-day` applies one Integration-provided
-day frame atomically and recalculates the current route once. The repository
-does not include the seven-day observation file yet, so this endpoint returns
-`DAY_TEMPLATES_NOT_CONFIGURED` until Integration supplies it. Set
-`ROUTEPULSE_DAY_TEMPLATES_PATH` to its location, or place it at
-`data/day_templates.json`. Its top-level object must include the imported
+day frame atomically and recalculates the current route once. To use a different
+file, set `ROUTEPULSE_DAY_TEMPLATES_PATH`; if it is missing, the endpoint
+returns `DAY_TEMPLATES_NOT_CONFIGURED`. Its top-level object must include the imported
 `graph_version` and exactly seven ordered `days`; each day must identify
 `day_index`, `frame_id`, `scenario_date_local`, timezone-aware `scenario_time`,
 `observations_are_simulated: true`, `observation_source_id`, and a
@@ -69,14 +79,18 @@ does not include the seven-day observation file yet, so this endpoint returns
 `graph_version` returned by `/api/areas/area-a/state` lets Integration target
 the exact imported extract.
 
-Before the first frame is supplied and applied, state reports `day_index: 0`
+Before the first frame is applied, state reports `day_index: 0`
 and every road remains `unknown`. The first successful `/advance-day` applies
 day 1; it does not mark roads open by default.
 
 The new mode reports its map bounds and import metadata from `/scenario` and
 `/areas/area-a/state`. The area `bbox` is the OSM extract bounds, not a verified
-match to the attached screenshot. If the OSM file changes, choose a new database
-path; startup refuses to silently replace the graph in an existing database.
+match to the attached screenshot. `ROUTEPULSE_OSM_PATH` can select a different
+OSM extract, but its graph version must match the selected template.
+If the OSM file or graph conversion version changes, generate a matching
+template and choose a new database path. Existing Anamizu databases created
+with the old backend importer have different graph versions; startup refuses
+to silently replace their data. They are not automatically migrated or deleted.
 
 Configure local frontend origins with a comma-separated `ROUTEPULSE_CORS_ORIGINS`; the defaults are `http://localhost:5173` and `http://localhost:3000`.
 
@@ -108,4 +122,6 @@ python -m unittest discover -s routepulse-backend/tests -v
 ```
 
 The backend tests use temporary databases and exercise real HTTP requests for
-both supported launch directories; they do not use or modify your demo database.
+both supported launch directories, the checked-in full seven-day scenario,
+manual feedback, failure handling and database restart. They do not use or
+modify your demo database.

@@ -87,12 +87,14 @@ prove that their APIs or UI are integrated.
 
 ## OSM graph and seven-day simulation handoff
 
-This export is a **proposed integration format**, not an implemented backend
-API. It uses only Python's standard library. From `RoutePulse/`, with the
-downloaded OSM file in the adjacent `rescue-route-map/` folder:
+The backend and Integration use the same `build_graph` converter and the
+repository's canonical `routepulse-backend/data/map.osm`. The backend's default
+seven-day template is the checked-in `data/anamizu-v2/seven-day-scenario.json`.
+The separate frontend map is not yet unified or connected. The export uses only
+Python's standard library. From `RoutePulse/`:
 
 ```bash
-python3 -m algorithm.prepare_osm ../rescue-route-map/map.osm --output-dir data/anamizu-new
+python3 -m algorithm.prepare_osm routepulse-backend/data/map.osm --output-dir data/anamizu-new
 ```
 
 The output directory must not already exist. The command never overwrites an
@@ -100,7 +102,7 @@ existing export. To use a team-selected start and destination, choose node IDs
 from `graph.json` and create a **new** output directory:
 
 ```bash
-python3 -m algorithm.prepare_osm ../rescue-route-map/map.osm \
+python3 -m algorithm.prepare_osm routepulse-backend/data/map.osm \
   --output-dir data/anamizu-selected \
   --start-node osm-node-REAL_ID --end-node osm-node-REAL_ID
 ```
@@ -167,13 +169,13 @@ real evidence. The first six days have a verified candidate route for the
 provisional demo pair; Day 7 blocks all incoming edges to that destination
 to demonstrate `no_path`.
 
-The suggested Day 1 manual blocked report and Day 4 manual reopening must
-actually be submitted through the eventual backend; they are not fabricated
-external reports. The route checks assume the documented resulting statuses
-and **do not test** backend report merging, freshness, transactions, HTTP, or
-the product frontend. Daily batches and graph schema remain subject to team
-agreement. The older `data/anamizu-v1` export is preserved as a legacy scenario
-and does **not** satisfy the severe-damage requirements.
+The suggested Day 1 manual blocked report and Day 4 manual reopening must be
+submitted through the backend; they are not fabricated external reports.
+The pure-routing checks alone do not test backend report merging or HTTP.
+Separate backend tests now exercise the checked-in seven-day file, manual
+reports, failures and restart over HTTP. They do not test the product frontend.
+The older `data/anamizu-v1` export is preserved as a legacy scenario and does
+**not** satisfy the severe-damage requirements.
 
 The seven-day map preview for the new
 `data/anamizu-v2` export can be opened at

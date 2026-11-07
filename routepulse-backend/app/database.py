@@ -121,7 +121,7 @@ def _create_schema(connection: sqlite3.Connection) -> None:
 
 
 def _initialize_legacy(connection: sqlite3.Connection) -> None:
-    exists = connection.execute("SELECT 1 FROM area_state WHERE area_id = ?", (AREA_ID,)).fetchone()
+    exists = connection.execute("SELECT scenario_mode FROM area_state WHERE area_id = ?", (AREA_ID,)).fetchone()
     if exists:
         if exists["scenario_mode"] != "legacy":
             raise RuntimeError("Database belongs to another scenario mode; configure a separate ROUTEPULSE_DB_PATH.")

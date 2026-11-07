@@ -38,15 +38,19 @@ server.run(sockets=[listener])
 
 
 @contextmanager
-def running_backend(cwd, pythonpath):
+def running_backend(cwd, pythonpath, *, db_path=None, extra_env=None):
     with tempfile.TemporaryDirectory(prefix="routepulse-integration-") as directory:
-        db_path = Path(directory) / "scenario.sqlite3"
+        db_path = db_path or Path(directory) / "scenario.sqlite3"
         env = os.environ.copy()
+        for key in ("ROUTEPULSE_SCENARIO_MODE", "ROUTEPULSE_OSM_PATH", "ROUTEPULSE_DAY_TEMPLATES_PATH"):
+            env.pop(key, None)
         env.update({
             "PYTHONPATH": str(pythonpath),
             "PYTHONDONTWRITEBYTECODE": "1",
             "ROUTEPULSE_DB_PATH": str(db_path),
         })
+        if extra_env:
+            env.update(extra_env)
         with tempfile.TemporaryFile(mode="w+t", encoding="utf-8") as log:
             process = subprocess.Popen(
                 [sys.executable, "-c", SERVER],
@@ -70,7 +74,7 @@ def running_backend(cwd, pythonpath):
                         with urlopen(base_url + "/scenario", timeout=1) as response:
                             if response.status == 200:
                                 break
-                    except URLError:
+                    except (URLError, ConnectionResetError):
                         if process.poll() is not None or time.monotonic() >= deadline:
                             log.seek(0)
                             raise RuntimeError(f"Backend did not become ready:\n{log.read()}")
